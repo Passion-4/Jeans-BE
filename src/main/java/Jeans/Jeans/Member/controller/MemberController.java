@@ -19,6 +19,7 @@ public class MemberController {
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequestDto requestDto){
         return ResponseEntity.ok().body(memberService.signUp(requestDto.getName(), requestDto.getBirthday(), requestDto.getPhone(), requestDto.getPassword()));
