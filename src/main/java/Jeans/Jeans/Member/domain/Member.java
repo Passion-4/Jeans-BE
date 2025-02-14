@@ -30,11 +30,11 @@ public class Member {
     private String profileUrl;
 
     @Builder
-    public Member(String name, LocalDate birthday, String phone, String password){
+    public Member(String name, LocalDate birthday, String phone, String password, String profileUrl){
         this.name = name;
         this.birthday = birthday;
         this.phone = phone;
         this.password = password;
-        this.profileUrl = null;
+        this.profileUrl = profileUrl;
     }
 }
