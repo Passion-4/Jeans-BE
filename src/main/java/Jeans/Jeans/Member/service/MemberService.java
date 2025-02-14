@@ -5,6 +5,7 @@ import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +71,32 @@ public class MemberService {
                 .phone(member.getPhone())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    // AccessToken 재발급
+    public LoginResponseDto refresh(String refreshTokenValue){
+        // 해당 RefreshToken이 유효한지 DB에서 탐색
+        RefreshToken refreshToken = refreshTokenService.findRefreshToken(refreshTokenValue);
+
+        // RefreshToken에 담긴 아이디 값 가져오기
+        Claims claims = JwtUtil.parseRefreshToken(refreshToken.getValue(), refreshKey);
+        String phone = claims.get("userId").toString();
+        System.out.println("RefreshToken에 담긴 아이디 : " + phone);
+
+        // 가져온 아이디에 해당하는 member가 존재하는지 확인
+        Member member = findMemberByPhone(phone);
+
+        // 새 AccessToken 생성
+        String accessToken = JwtUtil.createAccessToken(member.getPhone(), accessKey, AccessExpireTimeMs);
+
+        // 새 AccessToken과 기존 RefreshToken을 DTO에 담아 리턴
+        return LoginResponseDto
+                .builder()
+                .memberId(member.getMemberId())
+                .phone(member.getPhone())
+                .accessToken(accessToken)
+                .refreshToken(refreshTokenValue)
                 .build();
     }
 

@@ -2,6 +2,7 @@ package Jeans.Jeans.Member.controller;
 
 import Jeans.Jeans.Member.dto.LoginRequestDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
+import Jeans.Jeans.Member.dto.RefreshRequestDto;
 import Jeans.Jeans.Member.dto.SignUpRequestDto;
 import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Member.service.RefreshTokenService;
@@ -30,5 +31,11 @@ public class MemberController {
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto requestDto){
         return memberService.login(requestDto.getPhone(), requestDto.getPassword());
+    }
+
+    // RefreshToken을 이용해 새 AccessToken 발급 요청
+    @PostMapping("/refresh")
+    public LoginResponseDto refresh(@RequestBody RefreshRequestDto refreshRequestDto){
+        return memberService.refresh(refreshRequestDto.getRefreshToken());
     }
 }
