@@ -39,4 +39,8 @@ public class Follow {
     public void updateStatus(Status status) {
         this.status = status;
     }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
 }
