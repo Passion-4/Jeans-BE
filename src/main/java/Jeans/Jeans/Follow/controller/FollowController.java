@@ -1,6 +1,7 @@
 package Jeans.Jeans.Follow.controller;
 
 import Jeans.Jeans.Follow.dto.FriendDto;
+import Jeans.Jeans.Follow.dto.NicknameRequestDto;
 import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.service.FollowService;
 import Jeans.Jeans.Member.domain.Member;
@@ -66,4 +67,14 @@ public class FollowController {
         followService.deleteFriend(user, memberId);
         return "친구가 삭제되었습니다.";
     }
+
+    // 별명 수정
+    @PatchMapping("/follow-list/nickname")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String updateNickname(@RequestBody NicknameRequestDto requestDto){
+        Member member = memberService.getLoginMember();
+        followService.updateNickname(member, requestDto);
+        return "별명이 수정되었습니다.";
+    }
+
 }

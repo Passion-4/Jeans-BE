@@ -3,6 +3,7 @@ package Jeans.Jeans.Follow.service;
 import Jeans.Jeans.Follow.domain.Follow;
 import Jeans.Jeans.Follow.domain.Status;
 import Jeans.Jeans.Follow.dto.FriendDto;
+import Jeans.Jeans.Follow.dto.NicknameRequestDto;
 import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.repository.FollowRepository;
 import Jeans.Jeans.Member.domain.Member;
@@ -108,5 +109,15 @@ public class FollowService {
         followRepository.delete(follow);
         follow = followRepository.findByFollowerAndFollowing(friend, user);
         followRepository.delete(follow);
+    }
+
+    // 별명 수정
+    public void updateNickname(Member user, NicknameRequestDto requestDto){
+        Long memberId = requestDto.getMemberId();
+        Member friend = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 회원이 존재하지 않습니다."));
+        Follow follow = followRepository.findByFollowerAndFollowing(user, friend);
+        follow.updateNickname(requestDto.getNickname());
+        followRepository.save(follow);
     }
 }
