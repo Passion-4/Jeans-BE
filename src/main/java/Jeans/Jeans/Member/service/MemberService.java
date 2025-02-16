@@ -119,6 +119,13 @@ public class MemberService {
         basicEditRepository.save(basicEdit);
     }
 
+    // 기본 보정 설정 변경
+    public void updateBasicEdit(Member member, BasicEditRequestDto requestDto){
+        BasicEdit basicEdit = basicEditRepository.findByMember(member);
+        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        basicEditRepository.save(basicEdit);
+    }
+
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인
     @Transactional(readOnly = true)
     public boolean existsByPhone(String phone){
