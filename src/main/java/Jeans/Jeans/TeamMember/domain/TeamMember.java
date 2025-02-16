@@ -3,10 +3,7 @@ package Jeans.Jeans.TeamMember.domain;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Team.domain.Team;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -24,4 +21,10 @@ public class TeamMember {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+
+    @Builder
+    public TeamMember(Member member, Team team){
+        this.member = member;
+        this.team = team;
+    }
 }
