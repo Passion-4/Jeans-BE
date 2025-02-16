@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,4 +29,13 @@ public class Photo {
 
     @Column(nullable = false)
     private String photoUrl;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private LocalDate photoDate;
+
+    @Column(nullable = false)
+    private String location;
 }
