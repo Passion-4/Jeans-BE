@@ -3,6 +3,7 @@ package Jeans.Jeans.Team.service;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.Team.domain.Team;
+import Jeans.Jeans.Team.dto.CheckResponseDto;
 import Jeans.Jeans.Team.dto.TeamDto;
 import Jeans.Jeans.Team.dto.TeamRequestDto;
 import Jeans.Jeans.Team.repository.TeamRepository;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +39,24 @@ public class TeamService {
             teamMemberRepository.save(teamMember1);
         }
         return "팀이 생성되었습니다.";
+    }
+
+    // 기존 팀 여부 조회
+    public CheckResponseDto checkTeamExists(Member member, List<Long> memberIds) {
+        memberIds.add(member.getMemberId());
+        long size = memberIds.size();
+        List<Long> existingTeams = teamMemberRepository.findTeamsByMemberIds(memberIds, size);
+
+        Boolean check = false;
+        Long teamId = null;
+
+        // 이미 존재하는 팀이 있는 경우
+        if (!existingTeams.isEmpty()) {
+            check = true;
+            teamId = existingTeams.get(0);
+        }
+
+        return new CheckResponseDto(check, teamId);
     }
 
     // 팀 정보 조회
