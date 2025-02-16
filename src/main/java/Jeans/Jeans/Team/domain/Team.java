@@ -1,13 +1,10 @@
 package Jeans.Jeans.Team.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team {
     @Id
@@ -20,4 +17,10 @@ public class Team {
 
     @Column
     private String imageUrl;
+
+    @Builder
+    public Team(String name, String imageUrl){
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 }
