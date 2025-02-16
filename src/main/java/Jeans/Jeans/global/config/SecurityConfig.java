@@ -23,15 +23,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.httpBasic(HttpBasicConfigurer::disable)
-                .csrf(CsrfConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/members/signup", "/members/login", "/members/refreshtoken").permitAll()  // 회원가입, 로그인은 무조건 허용
-                        .requestMatchers(HttpMethod.POST, "/members/**").authenticated())  // 모든 POST 요청과 /members/로 시작하는 다른 URI의 모든 요청은 인증 요구
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-                .build();
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity.sessionManagement(
+                sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        httpSecurity.formLogin(AbstractHttpConfigurer::disable);
+        httpSecurity.httpBasic(AbstractHttpConfigurer::disable);
+
+        httpSecurity.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/members/signup", "/members/login", "/members/refreshtoken").permitAll()
+                .anyRequest().authenticated()
+        );
+        httpSecurity.addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
 }
 

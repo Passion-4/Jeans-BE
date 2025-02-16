@@ -21,4 +21,10 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByValue(refreshTokenValue)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 RefreshToken입니다."));
     }
+
+    public void deleteRefreshToken(String refreshTokenValue){
+        RefreshToken refreshToken = refreshTokenRepository.findByValue(refreshTokenValue)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 RefreshToken입니다."));
+        refreshTokenRepository.delete(refreshToken);
+    }
 }

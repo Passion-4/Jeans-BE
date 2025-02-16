@@ -8,10 +8,7 @@ import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Member.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,5 +34,13 @@ public class MemberController {
     @PostMapping("/refresh")
     public LoginResponseDto refresh(@RequestBody RefreshRequestDto refreshRequestDto){
         return memberService.refresh(refreshRequestDto.getRefreshToken());
+    }
+
+    // 로그아웃
+    // 전달받은 RefreshToken을 DB에서 삭제
+    @DeleteMapping("/logout")
+    public String logout(@RequestBody RefreshRequestDto refreshRequestDto) {
+        refreshTokenService.deleteRefreshToken(refreshRequestDto.getRefreshToken());
+        return "로그아웃되었습니다.";
     }
 }
