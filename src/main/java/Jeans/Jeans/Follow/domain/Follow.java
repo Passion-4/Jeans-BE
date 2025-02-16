@@ -2,13 +2,10 @@ package Jeans.Jeans.Follow.domain;
 
 import Jeans.Jeans.Member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow {
     @Id
@@ -30,4 +27,16 @@ public class Follow {
 
     @Column(nullable = false)
     private String nickname;
+
+    @Builder
+    public Follow(Member follower, Member following, Status status, String nickname){
+        this.follower = follower;
+        this.following = following;
+        this.status = status;
+        this.nickname = nickname;
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }
