@@ -6,6 +6,7 @@ import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.BasicEditRequestDto;
 import Jeans.Jeans.Member.dto.BasicEditResponseDto;
+import Jeans.Jeans.Member.dto.FollowTargetDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
@@ -130,6 +131,13 @@ public class MemberService {
     // 기본 보정 설정 여부 조회
     public BasicEditResponseDto existsByBasicEdit(Member member){
         return new BasicEditResponseDto(member.getMemberId(), basicEditRepository.existsByMember(member));
+    }
+
+    // 팔로우할 회원 검색
+    public FollowTargetDto getFollowTarget(String name, String phone){
+        Member member = memberRepository.findByNameAndPhone(name, phone)
+                .orElseThrow(() -> new EntityNotFoundException("해당 이름과 전화번호에 해당하는 회원이 존재하지 않습니다."));
+        return new FollowTargetDto(member.getMemberId(), name, member.getProfileUrl());
     }
 
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인
