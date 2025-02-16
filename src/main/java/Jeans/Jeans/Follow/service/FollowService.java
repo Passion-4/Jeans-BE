@@ -2,6 +2,7 @@ package Jeans.Jeans.Follow.service;
 
 import Jeans.Jeans.Follow.domain.Follow;
 import Jeans.Jeans.Follow.domain.Status;
+import Jeans.Jeans.Follow.dto.FriendDto;
 import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.repository.FollowRepository;
 import Jeans.Jeans.Member.domain.Member;
@@ -83,5 +84,18 @@ public class FollowService {
             followList.add(new RequestedFollowDto(follow.getFollowId(), follower.getMemberId(), follower.getName(), follower.getProfileUrl()));
         }
         return followList;
+    }
+
+    // 친구 목록 조회
+    public List<FriendDto> getFriendList(Member member){
+        List<FriendDto> friendDtoList = new ArrayList<>();
+
+        List<Follow> follows = new ArrayList<>();
+        follows = followRepository.findAllByFollowerAndStatusOrderByFollowIdDesc(member, Status.FRIEND);
+        for (Follow follow : follows){
+            Member friend = follow.getFollowing();
+            friendDtoList.add(new FriendDto(friend.getMemberId(), friend.getName(), friend.getProfileUrl(), follow.getNickname()));
+        }
+        return friendDtoList;
     }
 }

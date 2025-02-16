@@ -1,5 +1,6 @@
 package Jeans.Jeans.Follow.controller;
 
+import Jeans.Jeans.Follow.dto.FriendDto;
 import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.service.FollowService;
 import Jeans.Jeans.Member.domain.Member;
@@ -47,5 +48,13 @@ public class FollowController {
     public List<RequestedFollowDto> getRequestedFollowList(){
         Member member = memberService.getLoginMember();
         return followService.getRequestedFollowList(member);
+    }
+
+    // 친구 목록 조회
+    @GetMapping("/follow-list")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<FriendDto> getFriendList(){
+        Member member = memberService.getLoginMember();
+        return followService.getFriendList(member);
     }
 }
