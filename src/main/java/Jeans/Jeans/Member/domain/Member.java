@@ -1,6 +1,8 @@
 package Jeans.Jeans.Member.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,8 +19,10 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private LocalDate birthday;
+    @Column(nullable = false, length = 6)
+    @Size(min = 6, max = 6)
+    @Pattern(regexp = "\\d{6}", message = "생년월일은 6자리 숫자여야 합니다.")
+    private String birthday;
 
     @Column(nullable = false)
     private String phone;
@@ -30,11 +34,11 @@ public class Member {
     private String profileUrl;
 
     @Builder
-    public Member(String name, LocalDate birthday, String phone, String password){
+    public Member(String name, String birthday, String phone, String password, String profileUrl){
         this.name = name;
         this.birthday = birthday;
         this.phone = phone;
         this.password = password;
-        this.profileUrl = null;
+        this.profileUrl = profileUrl;
     }
 }

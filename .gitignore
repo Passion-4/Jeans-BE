@@ -38,4 +38,5 @@ out/
 
 ### Application Settings ###
 application.yml
+application-secret.yml
 *.env
