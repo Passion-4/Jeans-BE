@@ -2,6 +2,7 @@ package Jeans.Jeans.Follow.service;
 
 import Jeans.Jeans.Follow.domain.Follow;
 import Jeans.Jeans.Follow.domain.Status;
+import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.repository.FollowRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.repository.MemberRepository;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,5 +52,19 @@ public class FollowService {
         else{
             return "잘못된 요청입니다.";
         }
+    }
+
+    // 받은 팔로우 요청 목록 조회
+    public List<RequestedFollowDto> getRequestedFollowList(Member member){
+        List<RequestedFollowDto> followList = new ArrayList<>();
+
+        // 사용자가 받은 팔로우 요청들을 최신순으로 정렬한 리스트
+        List<Follow> follows = new ArrayList<>();
+        follows = followRepository.findAllByFollowingAndStatusOrderByFollowIdDesc(member, Status.WAIT);
+        for (Follow follow : follows){
+            Member follower = follow.getFollower();
+            followList.add(new RequestedFollowDto(follow.getFollowId(), follower.getMemberId(), follower.getName(), follower.getProfileUrl()));
+        }
+        return followList;
     }
 }

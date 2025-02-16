@@ -1,14 +1,15 @@
 package Jeans.Jeans.Follow.controller;
 
+import Jeans.Jeans.Follow.dto.RequestedFollowDto;
 import Jeans.Jeans.Follow.service.FollowService;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +31,13 @@ public class FollowController {
         Member user = memberService.getLoginMember();
         String response = followService.acceptFollow(user, followId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // 받은 팔로우 요청 목록 조회
+    @GetMapping("/follow/requests")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<RequestedFollowDto> getRequestedFollowList(){
+        Member member = memberService.getLoginMember();
+        return followService.getRequestedFollowList(member);
     }
 }
