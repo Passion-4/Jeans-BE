@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow {
     @Id
@@ -34,5 +34,9 @@ public class Follow {
         this.following = following;
         this.status = status;
         this.nickname = nickname;
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }

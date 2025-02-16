@@ -23,4 +23,12 @@ public class FollowController {
         String response = followService.createFollow(user, memberId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    // 팔로우 요청 수락
+    @PostMapping("/follow/requests/{follow_id}")
+    public ResponseEntity<String> acceptFollow(@PathVariable("follow_id") Long followId){
+        Member user = memberService.getLoginMember();
+        String response = followService.acceptFollow(user, followId);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }
