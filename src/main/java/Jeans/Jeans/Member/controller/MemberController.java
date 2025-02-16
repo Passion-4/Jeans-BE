@@ -8,6 +8,7 @@ import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Member.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,5 +43,11 @@ public class MemberController {
     public String logout(@RequestBody RefreshRequestDto refreshRequestDto) {
         refreshTokenService.deleteRefreshToken(refreshRequestDto.getRefreshToken());
         return "로그아웃되었습니다.";
+    }
+
+    // 회원탈퇴
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMember(Authentication authentication){
+        return ResponseEntity.ok().body(memberService.delete(authentication));
     }
 }

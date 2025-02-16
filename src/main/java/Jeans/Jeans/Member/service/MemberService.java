@@ -9,11 +9,13 @@ import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +102,13 @@ public class MemberService {
                 .build();
     }
 
+    // 회원탈퇴
+    public String delete(Authentication authentication){
+        Member member = getLoginMember();
+        memberRepository.delete(member);
+        return "회원탈퇴가 완료되었습니다.";
+    }
+
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인
     @Transactional(readOnly = true)
     public boolean existsByPhone(String phone){
@@ -111,5 +120,13 @@ public class MemberService {
     public Member findMemberByPhone(String phone){
         return memberRepository.findByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("아이디가 " + phone + "인 회원이 존재하지 않습니다."));
+    }
+
+    // 현재 로그인한 member 불러오기
+    public Member getLoginMember(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String phone = authentication.getName();
+        return memberRepository.findByPhone(phone)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "인증된 회원 정보가 없습니다."));
     }
 }
