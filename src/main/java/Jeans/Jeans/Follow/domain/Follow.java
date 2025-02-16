@@ -23,4 +23,11 @@ public class Follow {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "following_id", nullable = false)
     private Member following;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
+
+    @Column(nullable = false)
+    private String nickname;
 }
