@@ -5,6 +5,7 @@ import Jeans.Jeans.BasicEdit.respository.BasicEditRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.BasicEditRequestDto;
+import Jeans.Jeans.Member.dto.BasicEditResponseDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
@@ -124,6 +125,11 @@ public class MemberService {
         BasicEdit basicEdit = basicEditRepository.findByMember(member);
         basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
         basicEditRepository.save(basicEdit);
+    }
+
+    // 기본 보정 설정 여부 조회
+    public BasicEditResponseDto existsByBasicEdit(Member member){
+        return new BasicEditResponseDto(member.getMemberId(), basicEditRepository.existsByMember(member));
     }
 
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인

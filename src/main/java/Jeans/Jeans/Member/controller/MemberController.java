@@ -64,4 +64,11 @@ public class MemberController {
         memberService.updateBasicEdit(member, requestDto);
         return new ResponseEntity<>("memberId가 " + member.getMemberId() + "인 member의 보정 선호 정보가 변경되었습니다.", HttpStatus.OK);
     }
+
+    // 기본 보정 설정 여부 조회
+    @GetMapping("members/basic")
+    public BasicEditResponseDto existsByBasicEdit(){
+        Member member = memberService.getLoginMember();
+        return memberService.existsByBasicEdit(member);
+    }
 }
