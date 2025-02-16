@@ -28,7 +28,6 @@ public class Member {
     private String phone;
 
     @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$", message = "비밀번호는 영문과 숫자를 포함해야 합니다.")
     private String password;
 
     @Column

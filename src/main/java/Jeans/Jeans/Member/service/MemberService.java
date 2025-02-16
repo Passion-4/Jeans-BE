@@ -34,7 +34,7 @@ public class MemberService {
     // Refresh 토큰 만료 시간을 7일로 설정
     private Long RefreshExpireTimeMs = 7 * 24 * 1000 * 60 * 60L;
 
-    public String signUp(String name, LocalDate birthday, String phone, String password){
+    public String signUp(String name, String birthday, String phone, String password){
         if(existsByPhone(phone)) throw new RuntimeException(phone + "은 이미 존재하는 전화번호입니다.");
 
         memberRepository.save(

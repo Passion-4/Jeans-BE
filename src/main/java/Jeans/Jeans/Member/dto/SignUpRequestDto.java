@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SignUpRequestDto {
     private String name;
-    private LocalDate birthday;
+    private String birthday;
     private String phone;
     private String password;
 }
