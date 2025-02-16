@@ -71,4 +71,11 @@ public class MemberController {
         Member member = memberService.getLoginMember();
         return memberService.existsByBasicEdit(member);
     }
+
+    // 팔로우 할 회원 검색
+    @GetMapping("/members/search")
+    @ResponseStatus(value = HttpStatus.OK)
+    public FollowTargetDto getFollowTarget(@RequestParam String name, @RequestParam String phone){
+        return memberService.getFollowTarget(name, phone);
+    }
 }
