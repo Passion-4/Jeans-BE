@@ -99,4 +99,14 @@ public class FollowService {
         }
         return friendDtoList;
     }
+
+    // 친구 삭제
+    public void deleteFriend(Member user, Long memberId){
+        Member friend = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 회원이 존재하지 않습니다."));
+        Follow follow = followRepository.findByFollowerAndFollowing(user, friend);
+        followRepository.delete(follow);
+        follow = followRepository.findByFollowerAndFollowing(friend, user);
+        followRepository.delete(follow);
+    }
 }
