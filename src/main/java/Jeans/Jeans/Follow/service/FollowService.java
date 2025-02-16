@@ -48,6 +48,7 @@ public class FollowService {
             followRepository.save(firstFollow);
 
             Follow secondFollow = new Follow(user, firstFollow.getFollower(), Status.FRIEND, "친구");
+            followRepository.save(secondFollow);
             return "팔로우 요청이 수락되었습니다.";
         }
         else{
