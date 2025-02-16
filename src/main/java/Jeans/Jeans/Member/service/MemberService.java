@@ -1,7 +1,10 @@
 package Jeans.Jeans.Member.service;
 
+import Jeans.Jeans.BasicEdit.domain.BasicEdit;
+import Jeans.Jeans.BasicEdit.respository.BasicEditRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
+import Jeans.Jeans.Member.dto.BasicEditRequestDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
@@ -23,6 +26,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
     private final RefreshTokenService refreshTokenService;
+    private final BasicEditRepository basicEditRepository;
 
     @Value("${spring.jwt.secret-key}")
     private String accessKey;
@@ -107,6 +111,12 @@ public class MemberService {
         Member member = getLoginMember();
         memberRepository.delete(member);
         return "회원탈퇴가 완료되었습니다.";
+    }
+
+    // 기본 보정 설정
+    public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
+        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        basicEditRepository.save(basicEdit);
     }
 
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인
