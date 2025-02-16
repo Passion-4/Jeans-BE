@@ -2,10 +2,7 @@ package Jeans.Jeans.BasicEdit.domain;
 
 import Jeans.Jeans.Member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -34,4 +31,22 @@ public class BasicEdit {
 
     @Column(nullable = false)
     private Boolean edit5;
+
+    @Builder
+    public BasicEdit(Member member, Boolean edit1, Boolean edit2, Boolean edit3, Boolean edit4, Boolean edit5){
+        this.member = member;
+        this.edit1 = edit1;
+        this.edit2 = edit2;
+        this.edit3 = edit3;
+        this.edit4 = edit4;
+        this.edit5 = edit5;
+    }
+
+    public void updateBasicEdit(Boolean edit1, Boolean edit2, Boolean edit3, Boolean edit4, Boolean edit5){
+        this.edit1 = edit1;
+        this.edit2 = edit2;
+        this.edit3 = edit3;
+        this.edit4 = edit4;
+        this.edit5 = edit5;
+    }
 }
