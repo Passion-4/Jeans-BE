@@ -54,6 +54,23 @@ public class FollowService {
         }
     }
 
+    // 팔로우 요청 거절
+    @Transactional
+    public String rejectFollow(Member user, Long followId){
+        Follow follow = followRepository.findById(followId)
+                .orElseThrow(() -> new EntityNotFoundException("followId가 " + followId + "인 팔로우 요청이 존재하지 않습니다."));
+
+        // 해당 팔로우의 following 회원과 로그인한 사용자의 일치 여부 확인
+        // 팔로우 요청의 status가 WAIT인지 확인
+        if(follow.getFollowing().equals(user)&&follow.getStatus()==Status.WAIT){
+            followRepository.delete(follow);
+            return "팔로우 요청이 거절되었습니다.";
+        }
+        else{
+            return "잘못된 요청입니다.";
+        }
+    }
+
     // 받은 팔로우 요청 목록 조회
     public List<RequestedFollowDto> getRequestedFollowList(Member member){
         List<RequestedFollowDto> followList = new ArrayList<>();

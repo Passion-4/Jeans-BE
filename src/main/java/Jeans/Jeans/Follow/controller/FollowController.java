@@ -33,6 +33,14 @@ public class FollowController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // 팔로우 요청 거절
+    @DeleteMapping("/follow/requests/{follow_id}")
+    public ResponseEntity<String> rejectFollow(@PathVariable("follow_id") Long followId){
+        Member user = memberService.getLoginMember();
+        String response = followService.rejectFollow(user, followId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     // 받은 팔로우 요청 목록 조회
     @GetMapping("/follow/requests")
     @ResponseStatus(value = HttpStatus.OK)
