@@ -28,7 +28,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList(
-                "http://api.passion4-jeans.store",
+                "https://api.passion4-jeans.store",
                 "http://localhost:8081"));
         config.setAllowedMethods(List.of("*"));
         config.setAllowedHeaders(List.of("*"));
