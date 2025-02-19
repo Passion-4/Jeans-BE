@@ -3,6 +3,7 @@ package Jeans.Jeans.Member.controller;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.dto.*;
 import Jeans.Jeans.Member.service.MemberService;
+import Jeans.Jeans.Member.service.MessageService;
 import Jeans.Jeans.Member.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,11 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
     private final RefreshTokenService refreshTokenService;
+    private final MessageService messageService;
 
     // 회원가입
     @PostMapping("/members/signup")
@@ -77,5 +82,30 @@ public class MemberController {
     @ResponseStatus(value = HttpStatus.OK)
     public FollowTargetDto getFollowTarget(@RequestParam String name, @RequestParam String phone){
         return memberService.getFollowTarget(name, phone);
+    }
+
+    // 인증번호 요청
+    @PostMapping("/code/request")
+    public ResponseEntity<String> sendSms(@RequestBody CodeRequestDto requestDto){
+        String response = messageService.sendSms(requestDto.getPhone());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // 인증번호 일치 여부 확인
+    @PostMapping("/code/verify")
+    public ResponseEntity<Map<String, Object>> verifySmsCode(@RequestBody VerificationReqDto requestDto) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (messageService.checkVerification(requestDto)) {
+            response.put("success", false);
+            response.put("message", "인증번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        messageService.deleteSmsCertification(requestDto.getPhone());
+
+        response.put("success", true);
+        response.put("message", "인증 완료되었습니다.");
+        return ResponseEntity.ok(response);
     }
 }
