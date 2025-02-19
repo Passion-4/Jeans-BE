@@ -66,7 +66,7 @@ public class MessageService {
         params.put("type", "SMS");
         params.put("app_version", "app 1.0");
         params.put("to", to);
-        params.put("text", randomNum);
+        params.put("text", "[청바지] 본인확인 인증번호[" + randomNum+ "]를 화면에 입력해주세요");
         return params;
     }
 
