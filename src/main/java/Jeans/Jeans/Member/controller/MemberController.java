@@ -28,7 +28,7 @@ public class MemberController {
     }
 
     // 로그인
-    // 성공적으로 로그인한 경우, 회원의 아이디(phone), AccessToken 값, RefreshToken 값을 담은 DTO를 응답함
+    // 성공적으로 로그인한 경우, 회원의 아이디(phone), 회원의 나이(age), AccessToken 값, RefreshToken 값을 담은 DTO를 응답함
     @PostMapping("/members/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto requestDto){
         return memberService.login(requestDto.getPhone(), requestDto.getPassword());
@@ -68,13 +68,6 @@ public class MemberController {
         Member member = memberService.getLoginMember();
         memberService.updateBasicEdit(member, requestDto);
         return new ResponseEntity<>("memberId가 " + member.getMemberId() + "인 member의 보정 선호 정보가 변경되었습니다.", HttpStatus.OK);
-    }
-
-    // 기본 보정 설정 여부 조회
-    @GetMapping("members/basic")
-    public BasicEditResponseDto existsByBasicEdit(){
-        Member member = memberService.getLoginMember();
-        return memberService.existsByBasicEdit(member);
     }
 
     // 팔로우 할 회원 검색
