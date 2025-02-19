@@ -13,4 +13,5 @@ public class SignUpRequestDto {
     private String birthday;
     private String phone;
     private String password;
+    private Long voiceType;
 }

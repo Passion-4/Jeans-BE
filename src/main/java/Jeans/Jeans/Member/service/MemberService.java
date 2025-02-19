@@ -42,18 +42,11 @@ public class MemberService {
     // Refresh 토큰 만료 시간을 7일로 설정
     private Long RefreshExpireTimeMs = 7 * 24 * 1000 * 60 * 60L;
 
-    public String signUp(String name, String birthday, String phone, String password){
+    public String signUp(String name, String birthday, String phone, String password, Long voiceType){
         if(existsByPhone(phone)) throw new RuntimeException(phone + "은 이미 존재하는 전화번호입니다.");
 
-        memberRepository.save(
-                Member.builder()
-                        .name(name)
-                        .birthday(birthday)
-                        .phone(phone)
-                        .password(encoder.encode(password))
-                        .profileUrl(null)
-                        .build()
-        );
+        Member member = new Member(name, birthday, phone, encoder.encode(password), voiceType, null);
+        memberRepository.save(member);
         return "회원가입이 완료되었습니다.";
     }
 

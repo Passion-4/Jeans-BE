@@ -28,15 +28,19 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Long voiceType;
+
     @Column
     private String profileUrl;
 
     @Builder
-    public Member(String name, String birthday, String phone, String password, String profileUrl){
+    public Member(String name, String birthday, String phone, String password, Long voiceType, String profileUrl){
         this.name = name;
         this.birthday = birthday;
         this.phone = phone;
         this.password = password;
+        this.voiceType = voiceType;
         this.profileUrl = profileUrl;
     }
 }

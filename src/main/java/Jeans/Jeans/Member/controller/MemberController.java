@@ -24,7 +24,7 @@ public class MemberController {
     // 회원가입
     @PostMapping("/members/signup")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequestDto requestDto){
-        return ResponseEntity.ok().body(memberService.signUp(requestDto.getName(), requestDto.getBirthday(), requestDto.getPhone(), requestDto.getPassword()));
+        return ResponseEntity.ok().body(memberService.signUp(requestDto.getName(), requestDto.getBirthday(), requestDto.getPhone(), requestDto.getPassword(), requestDto.getVoiceType()));
     }
 
     // 로그인
