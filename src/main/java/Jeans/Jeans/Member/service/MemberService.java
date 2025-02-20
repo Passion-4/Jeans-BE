@@ -115,14 +115,14 @@ public class MemberService {
 
     // 기본 보정 설정
     public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
-        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
     }
 
     // 기본 보정 설정 변경
     public void updateBasicEdit(Member member, BasicEditRequestDto requestDto){
         BasicEdit basicEdit = basicEditRepository.findByMember(member);
-        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
     }
 

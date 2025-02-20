@@ -33,20 +33,16 @@ public class BasicEdit {
     private Boolean edit5;
 
     @Builder
-    public BasicEdit(Member member, Boolean edit1, Boolean edit2, Boolean edit3, Boolean edit4, Boolean edit5){
+    public BasicEdit(Member member, Boolean edit1, Boolean edit2, Boolean edit3){
         this.member = member;
         this.edit1 = edit1;
         this.edit2 = edit2;
         this.edit3 = edit3;
-        this.edit4 = edit4;
-        this.edit5 = edit5;
     }
 
-    public void updateBasicEdit(Boolean edit1, Boolean edit2, Boolean edit3, Boolean edit4, Boolean edit5){
+    public void updateBasicEdit(Boolean edit1, Boolean edit2, Boolean edit3){
         this.edit1 = edit1;
         this.edit2 = edit2;
         this.edit3 = edit3;
-        this.edit4 = edit4;
-        this.edit5 = edit5;
     }
 }

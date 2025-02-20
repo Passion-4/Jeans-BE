@@ -10,6 +10,4 @@ public class BasicEditRequestDto {
     private Boolean edit1;
     private Boolean edit2;
     private Boolean edit3;
-    private Boolean edit4;
-    private Boolean edit5;
 }
