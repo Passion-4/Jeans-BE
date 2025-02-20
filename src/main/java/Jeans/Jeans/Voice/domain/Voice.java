@@ -27,4 +27,7 @@ public class Voice {
 
     @Column(nullable = false)
     private String voiceUrl;
+
+    @Column(nullable = false)
+    private String transcript;
 }
