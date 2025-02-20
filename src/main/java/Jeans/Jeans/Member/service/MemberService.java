@@ -7,6 +7,7 @@ import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.BasicEditRequestDto;
 import Jeans.Jeans.Member.dto.FollowTargetDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
+import Jeans.Jeans.Member.dto.PasswordChangeDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -145,6 +146,16 @@ public class MemberService {
         return memberRepository.findByPhone(phone)
                 .orElseThrow(() -> new EntityNotFoundException("아이디가 " + phone + "인 회원이 존재하지 않습니다."));
     }
+
+
+    //비밀번호 변경
+    public void changePassword(PasswordChangeDto request) {
+        Member member = memberRepository.findByBirthdayAndPhone(request.getBirthday(), request.getPhone())
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+        member.setPassword(encoder.encode(request.getNewPassword()));
+        memberRepository.save(member);
+    }
+
 
     // 현재 로그인한 member 불러오기
     public Member getLoginMember(){

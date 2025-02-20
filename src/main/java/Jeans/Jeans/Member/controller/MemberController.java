@@ -84,6 +84,15 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+
+    //비밀번호바꾸기
+    @PatchMapping("/my/password")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDto request) {
+        memberService.changePassword(request);
+        return ResponseEntity.ok("비밀번호 변경완료");
+    }
+
+
     // 인증번호 일치 여부 확인
     @PostMapping("/code/verify")
     public ResponseEntity<Map<String, Object>> verifySmsCode(@RequestBody VerificationReqDto requestDto) {
