@@ -23,4 +23,8 @@ public class Team {
         this.name = name;
         this.imageUrl = imageUrl;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

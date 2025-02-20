@@ -6,12 +6,14 @@ import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.dto.CheckResponseDto;
 import Jeans.Jeans.Team.dto.TeamDto;
 import Jeans.Jeans.Team.dto.TeamRequestDto;
+import Jeans.Jeans.Team.dto.TeamUpdateRequestDto;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
 import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,4 +67,15 @@ public class TeamService {
                 .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 팀이 존재하지 않습니다."));
         return new TeamDto(teamId, team.getName(), team.getImageUrl());
     }
+
+    @Transactional
+    public String updateTeamName(TeamUpdateRequestDto requestDto) {
+        Team team = teamRepository.findById(requestDto.getTeamId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 팀이 존재하지 않습니다."));
+
+        team.setName(requestDto.getName());
+        return "팀명이 수정되었습니다.";
+    }
+
+
 }

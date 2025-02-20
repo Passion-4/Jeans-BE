@@ -5,6 +5,7 @@ import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Team.dto.CheckResponseDto;
 import Jeans.Jeans.Team.dto.TeamDto;
 import Jeans.Jeans.Team.dto.TeamRequestDto;
+import Jeans.Jeans.Team.dto.TeamUpdateRequestDto;
 import Jeans.Jeans.Team.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,5 +40,12 @@ public class TeamController {
     @ResponseStatus(value = HttpStatus.OK)
     public TeamDto getTeamInfo(@PathVariable("team_id") Long teamId){
         return teamService.getTeamInfo(teamId);
+    }
+
+    // 팀명 수정
+    @PatchMapping("/team/name")
+    public ResponseEntity<String> updateTeamName(@RequestBody TeamUpdateRequestDto requestDto) {
+        String response = teamService.updateTeamName(requestDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
