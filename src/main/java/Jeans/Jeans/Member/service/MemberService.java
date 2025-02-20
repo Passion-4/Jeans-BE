@@ -5,7 +5,6 @@ import Jeans.Jeans.BasicEdit.respository.BasicEditRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.BasicEditRequestDto;
-import Jeans.Jeans.Member.dto.BasicEditResponseDto;
 import Jeans.Jeans.Member.dto.FollowTargetDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
@@ -21,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -42,18 +43,11 @@ public class MemberService {
     // Refresh 토큰 만료 시간을 7일로 설정
     private Long RefreshExpireTimeMs = 7 * 24 * 1000 * 60 * 60L;
 
-    public String signUp(String name, String birthday, String phone, String password){
+    public String signUp(String name, String birthday, String phone, String password, Long voiceType){
         if(existsByPhone(phone)) throw new RuntimeException(phone + "은 이미 존재하는 전화번호입니다.");
 
-        memberRepository.save(
-                Member.builder()
-                        .name(name)
-                        .birthday(birthday)
-                        .phone(phone)
-                        .password(encoder.encode(password))
-                        .profileUrl(null)
-                        .build()
-        );
+        Member member = new Member(name, birthday, phone, encoder.encode(password), voiceType, null);
+        memberRepository.save(member);
         return "회원가입이 완료되었습니다.";
     }
 
@@ -74,12 +68,16 @@ public class MemberService {
         refreshTokenEntity.setValue(refreshToken);
         refreshTokenService.addRefreshToken(refreshTokenEntity);
 
-        return LoginResponseDto.builder()
-                .memberId(member.getMemberId())
-                .phone(member.getPhone())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        int birthYear = Integer.parseInt(member.getBirthday().substring(0, 2));
+        birthYear += (birthYear <= LocalDate.now().getYear() % 100) ? 2000 : 1900;
+        int currentYear = LocalDate.now().getYear();
+        Integer age = currentYear - birthYear + 1;
+
+        Boolean exists = false;
+        if (member.getProfileUrl() != null){
+            exists = true;
+        }
+        return new LoginResponseDto(member.getMemberId(), age, exists, member.getPhone(), accessToken, refreshToken);
     }
 
     // AccessToken 재발급
@@ -126,11 +124,6 @@ public class MemberService {
         BasicEdit basicEdit = basicEditRepository.findByMember(member);
         basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
         basicEditRepository.save(basicEdit);
-    }
-
-    // 기본 보정 설정 여부 조회
-    public BasicEditResponseDto existsByBasicEdit(Member member){
-        return new BasicEditResponseDto(member.getMemberId(), basicEditRepository.existsByMember(member));
     }
 
     // 팔로우할 회원 검색
