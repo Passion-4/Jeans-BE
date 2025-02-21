@@ -63,6 +63,13 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.delete(authentication));
     }
 
+    // 비밀번호 변경
+    @PatchMapping("/my/password")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
+        memberService.changePassword(passwordChangeDto);
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
     // 기본 보정 설정
     @PostMapping("/my/basic")
     public ResponseEntity<String> createBasicEdit(@RequestBody BasicEditRequestDto requestDto){

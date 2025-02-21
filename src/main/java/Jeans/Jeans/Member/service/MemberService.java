@@ -4,10 +4,7 @@ import Jeans.Jeans.BasicEdit.domain.BasicEdit;
 import Jeans.Jeans.BasicEdit.respository.BasicEditRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
-import Jeans.Jeans.Member.dto.BasicEditRequestDto;
-import Jeans.Jeans.Member.dto.FollowTargetDto;
-import Jeans.Jeans.Member.dto.LoginResponseDto;
-import Jeans.Jeans.Member.dto.ProfileUpdateResDto;
+import Jeans.Jeans.Member.dto.*;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -112,6 +109,14 @@ public class MemberService {
         Member member = getLoginMember();
         memberRepository.delete(member);
         return "회원탈퇴가 완료되었습니다.";
+    }
+
+    // 비밀번호 변경
+    public void changePassword(PasswordChangeDto requestDto) {
+        Member member = memberRepository.findByBirthdayAndPhone(requestDto.getBirthday(), requestDto.getPhone())
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+        member.setPassword(encoder.encode(requestDto.getNewPassword()));
+        memberRepository.save(member);
     }
 
     // 기본 보정 설정
