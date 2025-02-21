@@ -43,4 +43,8 @@ public class Member {
         this.voiceType = voiceType;
         this.profileUrl = profileUrl;
     }
+
+    public void updateProfile(String profileUrl){
+        this.profileUrl = profileUrl;
+    }
 }
