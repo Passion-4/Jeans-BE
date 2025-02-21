@@ -2,10 +2,19 @@ package Jeans.Jeans.Member.service;
 
 import Jeans.Jeans.BasicEdit.domain.BasicEdit;
 import Jeans.Jeans.BasicEdit.respository.BasicEditRepository;
+import Jeans.Jeans.Follow.domain.Follow;
+import Jeans.Jeans.Follow.domain.Status;
+import Jeans.Jeans.Follow.repository.FollowRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.*;
 import Jeans.Jeans.Member.repository.MemberRepository;
+import Jeans.Jeans.Team.domain.Team;
+import Jeans.Jeans.Team.dto.TargetTeamDto;
+import Jeans.Jeans.Team.dto.TeamDto;
+import Jeans.Jeans.Team.repository.TeamRepository;
+import Jeans.Jeans.TeamMember.domain.TeamMember;
+import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +39,9 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
     private final RefreshTokenService refreshTokenService;
     private final BasicEditRepository basicEditRepository;
+    private final TeamMemberRepository teamMemberRepository;
+    private final TeamRepository teamRepository;
+    private final FollowRepository followRepository;
 
     @Value("${spring.jwt.secret-key}")
     private String accessKey;
@@ -148,6 +162,35 @@ public class MemberService {
         Member member = memberRepository.findByNameAndPhone(name, phone)
                 .orElseThrow(() -> new EntityNotFoundException("해당 이름과 전화번호에 해당하는 회원이 존재하지 않습니다."));
         return new FollowTargetDto(member.getMemberId(), name, member.getProfileUrl());
+    }
+
+    // 사진 공유 대상 선택 시 팀, 친구 목록 조회
+    public ShareTargetDto getShareList(Member user){
+        List<TeamMember> teamMemberList = teamMemberRepository.findAllByMember(user);
+
+        List<Long> teamIds = new ArrayList<>();
+        for (TeamMember teamMember : teamMemberList){
+            teamIds.add(teamMember.getTeam().getTeamId());
+        }
+
+        List<TargetTeamDto> teamDtoList = new ArrayList<>();
+        for (Long teamId : teamIds){
+            Team team = teamRepository.findById(teamId)
+                    .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 팀이 존재하지 않습니다."));
+            teamDtoList.add(new TargetTeamDto(teamId, team.getName(), team.getImageUrl()));
+        }
+
+        List<Follow> follows = followRepository.findAllByFollowerAndStatus(user, Status.FRIEND);
+
+        List<TargetMemberDto> memberDtoList = new ArrayList<>();
+        for (Follow follow : follows){
+            Long memberId = follow.getFollowing().getMemberId();
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 member가 존재하지 않습니다."));
+            memberDtoList.add(new TargetMemberDto(memberId, member.getName(), member.getProfileUrl(), follow.getNickname()));
+        }
+
+        return new ShareTargetDto(teamDtoList, memberDtoList);
     }
 
     // 회원 가입 시 입력한 전화번호를 가진 member 존재 여부 확인
