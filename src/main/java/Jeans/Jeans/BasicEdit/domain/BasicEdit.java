@@ -26,12 +26,6 @@ public class BasicEdit {
     @Column(nullable = false)
     private Boolean edit3;
 
-    @Column(nullable = false)
-    private Boolean edit4;
-
-    @Column(nullable = false)
-    private Boolean edit5;
-
     @Builder
     public BasicEdit(Member member, Boolean edit1, Boolean edit2, Boolean edit3){
         this.member = member;
