@@ -5,6 +5,7 @@ import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.dto.CheckResponseDto;
 import Jeans.Jeans.Team.dto.TeamDto;
+import Jeans.Jeans.Team.dto.TeamNameUpdateReqDto;
 import Jeans.Jeans.Team.dto.TeamRequestDto;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
@@ -12,6 +13,7 @@ import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,16 @@ public class TeamService {
             teamMemberRepository.save(teamMember1);
         }
         return "팀이 생성되었습니다.";
+    }
+
+    // 팀명 수정
+    @Transactional
+    public String updateTeamName(TeamNameUpdateReqDto requestDto) {
+        Team team = teamRepository.findById(requestDto.getTeamId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 팀이 존재하지 않습니다."));
+
+        team.updateName(requestDto.getName());
+        return "팀명이 수정되었습니다.";
     }
 
     // 기존 팀 여부 조회

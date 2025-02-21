@@ -4,6 +4,7 @@ import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Team.dto.CheckResponseDto;
 import Jeans.Jeans.Team.dto.TeamDto;
+import Jeans.Jeans.Team.dto.TeamNameUpdateReqDto;
 import Jeans.Jeans.Team.dto.TeamRequestDto;
 import Jeans.Jeans.Team.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,13 @@ public class TeamController {
         Member member = memberService.getLoginMember();
         String response = teamService.createTeam(member, teamRequestDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // 팀명 수정
+    @PatchMapping("/team/name")
+    public ResponseEntity<String> updateTeamName(@RequestBody TeamNameUpdateReqDto requestDto){
+        String response = teamService.updateTeamName(requestDto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 기존 팀 여부 조회
