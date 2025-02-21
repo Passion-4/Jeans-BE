@@ -7,6 +7,7 @@ import Jeans.Jeans.Member.domain.RefreshToken;
 import Jeans.Jeans.Member.dto.BasicEditRequestDto;
 import Jeans.Jeans.Member.dto.FollowTargetDto;
 import Jeans.Jeans.Member.dto.LoginResponseDto;
+import Jeans.Jeans.Member.dto.ProfileUpdateResDto;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.global.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -115,15 +116,26 @@ public class MemberService {
 
     // 기본 보정 설정
     public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
-        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
     }
 
     // 기본 보정 설정 변경
     public void updateBasicEdit(Member member, BasicEditRequestDto requestDto){
         BasicEdit basicEdit = basicEditRepository.findByMember(member);
-        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
+    }
+
+    // 프로필 이미지 수정
+    public ProfileUpdateResDto updateProfile(Member member, String profileUrl){
+        member.updateProfile(profileUrl);
+        memberRepository.save(member);
+        Long memberId = member.getMemberId();
+        return ProfileUpdateResDto.builder()
+                .memberId(memberId)
+                .profileUrl(member.getProfileUrl())
+                .build();
     }
 
     // 팔로우할 회원 검색
