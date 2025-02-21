@@ -104,6 +104,14 @@ public class MemberController {
         return memberService.getFollowTarget(name, phone);
     }
 
+    // 사진 공유 대상 선택 시 팀, 친구 목록 조회
+    @GetMapping("/share-list")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ShareTargetDto getShareList(){
+        Member member = memberService.getLoginMember();
+        return memberService.getShareList(member);
+    }
+
     // 인증번호 요청
     @PostMapping("/code/request")
     public ResponseEntity<String> sendSms(@RequestBody CodeRequestDto requestDto){
