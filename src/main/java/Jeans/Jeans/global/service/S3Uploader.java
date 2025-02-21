@@ -3,6 +3,7 @@ package Jeans.Jeans.global.service;
 import Jeans.Jeans.global.exception.ErrorCode;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,10 +32,26 @@ public class S3Uploader {
 
     // MultipartFile을 전달받아 File로 전환한 후 S3에 업로드
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new ResponseStatusException(ErrorCode.CONVERT_MULTIPARTFILE_ERROR.getStatus(),
-                        ErrorCode.CONVERT_MULTIPARTFILE_ERROR.getMessage()));
-        return upload(uploadFile, dirName);
+        // File uploadFile = convert(multipartFile)
+        //         .orElseThrow(() -> new ResponseStatusException(ErrorCode.CONVERT_MULTIPARTFILE_ERROR.getStatus(),
+        // ErrorCode.CONVERT_MULTIPARTFILE_ERROR.getMessage()));
+        // return upload(uploadFile, dirName);
+        String fileName = dirName + "/" + UUID.randomUUID(); // S3에 저장할 파일 이름
+        return uploadToS3(multipartFile, fileName);
+    }
+
+    private String uploadToS3(MultipartFile multipartFile, String fileName) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(multipartFile.getSize());
+        metadata.setContentType(multipartFile.getContentType());
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            amazonS3Client.putObject(bucket, fileName, inputStream, metadata);
+        }
+
+        String fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
+        log.info("S3 업로드 성공. 파일 URL: {}", fileUrl);
+        return fileUrl;
     }
 
     private String upload(File uploadFile, String dirName) {
