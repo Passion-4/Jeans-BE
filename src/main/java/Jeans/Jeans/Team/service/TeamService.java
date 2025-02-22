@@ -3,10 +3,7 @@ package Jeans.Jeans.Team.service;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.Team.domain.Team;
-import Jeans.Jeans.Team.dto.CheckResponseDto;
-import Jeans.Jeans.Team.dto.TeamDto;
-import Jeans.Jeans.Team.dto.TeamNameUpdateReqDto;
-import Jeans.Jeans.Team.dto.TeamRequestDto;
+import Jeans.Jeans.Team.dto.*;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
 import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
@@ -51,6 +48,23 @@ public class TeamService {
 
         team.updateName(requestDto.getName());
         return "팀명이 수정되었습니다.";
+    }
+
+    // 팀 사진 수정
+    @Transactional
+    public TeamImageUpdateResDto updateTeamImage(Member member, String imageUrl, TeamImageUpdateReqDto updateReqDto){
+        Long teamId = updateReqDto.getTeamId();
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 회원이 존재하지 않습니다."));
+
+        if (!teamMemberRepository.existsByMemberAndTeam(member, team)) {
+            throw new EntityNotFoundException("사용자는 해당 팀의 멤버가 아닙니다.");
+        }
+
+        team.updateImage(imageUrl);
+        teamRepository.save(team);
+
+        return new TeamImageUpdateResDto(teamId, imageUrl);
     }
 
     // 기존 팀 여부 조회
