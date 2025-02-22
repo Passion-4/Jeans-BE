@@ -125,10 +125,13 @@ public class MemberService {
     }
 
     // 본인 확인
-    public MemberCheckResDto checkMember(MemberCheckReqDto checkReqDto){
-        Member member = memberRepository.findByBirthdayAndPhone(checkReqDto.getBirthday(), checkReqDto.getPhone())
+    public String checkMember(Member user, String birthday, String phone){
+        Member member = memberRepository.findByBirthdayAndPhone(birthday, phone)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
-        return new MemberCheckResDto(member.getMemberId());
+        if (!user.equals(member)) {
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+        }
+        return "본인 확인이 완료되었습니다.";
     }
 
     // 비밀번호 변경
