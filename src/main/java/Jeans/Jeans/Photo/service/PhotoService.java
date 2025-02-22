@@ -6,6 +6,7 @@ import Jeans.Jeans.MemberPhoto.domain.MemberPhoto;
 import Jeans.Jeans.MemberPhoto.repository.MemberPhotoRepository;
 import Jeans.Jeans.Photo.domain.Photo;
 import Jeans.Jeans.Photo.dto.FriendShareReqDto;
+import Jeans.Jeans.Photo.dto.PhotoDto;
 import Jeans.Jeans.Photo.dto.PhotoShareResDto;
 import Jeans.Jeans.Photo.dto.TeamShareReqDto;
 import Jeans.Jeans.Photo.repository.PhotoRepository;
@@ -15,14 +16,14 @@ import Jeans.Jeans.Tag.domain.Tag;
 import Jeans.Jeans.Tag.repository.TagRepository;
 import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.repository.TeamRepository;
+import Jeans.Jeans.TeamMember.domain.TeamMember;
+import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class PhotoService {
     private final TagRepository tagRepository;
     private final PhotoTagRepository photoTagRepository;
     private final TeamRepository teamRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     // 친구에게 사진 공유
     public PhotoShareResDto shareFriendPhoto(Member user, String photoUrl, FriendShareReqDto shareReqDto){
@@ -83,5 +85,40 @@ public class PhotoService {
             photoTagRepository.save(new PhotoTag(photo, tag));
         }
         return new PhotoShareResDto(photoUrl);
+    }
+
+    // 내 피드 조회
+    public List<PhotoDto> getFeedPhotos(Member member){
+        List<PhotoDto> photoDtoList = new ArrayList<>();
+        List<Photo> photoList = new ArrayList<>();
+
+        List<TeamMember> teamMembers = teamMemberRepository.findAllByMember(member);
+        List<Team> teams = new ArrayList<>();
+        for (TeamMember teamMember : teamMembers){
+            teams.add(teamMember.getTeam());
+        }
+        for (Team team : teams){
+            List<Photo> photos = photoRepository.findAllByTeam(team);
+            photoList.addAll(photos);
+        }
+
+        List<MemberPhoto> memberPhotos = new ArrayList<>();
+        Set<Photo> uniquePhotos = new HashSet<>();
+        for (MemberPhoto memberPhoto : memberPhotoRepository.findAllBySharer(member)) {
+            if (uniquePhotos.add(memberPhoto.getPhoto())) {
+                memberPhotos.add(memberPhoto);
+            }
+        }
+        memberPhotos.addAll(memberPhotoRepository.findAllByReceiver(member));
+        for(MemberPhoto memberPhoto : memberPhotos){
+            photoList.add(memberPhoto.getPhoto());
+        }
+
+        photoList.sort(Comparator.comparing(Photo::getPhotoId).reversed());
+        for (Photo photo : photoList){
+            photoDtoList.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoUrl()));
+        }
+
+        return photoDtoList;
     }
 }
