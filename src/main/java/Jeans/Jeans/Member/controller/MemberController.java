@@ -74,7 +74,8 @@ public class MemberController {
     // 비밀번호 변경
     @PatchMapping("/my/password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeReqDto changeReqDto) {
-        memberService.changePassword(changeReqDto);
+        Member user = memberService.getLoginMember();
+        memberService.changePassword(user, changeReqDto);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
 

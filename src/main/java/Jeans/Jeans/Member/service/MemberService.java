@@ -135,11 +135,9 @@ public class MemberService {
     }
 
     // 비밀번호 변경
-    public void changePassword(PasswordChangeReqDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 memberId의 회원이 존재하지 않습니다."));
-        member.updatePassword(encoder.encode(requestDto.getNewPassword()));
-        memberRepository.save(member);
+    public void changePassword(Member user, PasswordChangeReqDto requestDto) {
+        user.updatePassword(encoder.encode(requestDto.getNewPassword()));
+        memberRepository.save(user);
     }
 
     // 기본 보정 설정
