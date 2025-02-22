@@ -35,7 +35,4 @@ public class Photo {
 
     @Column(nullable = false)
     private LocalDate photoDate;
-
-    @Column(nullable = false)
-    private String location;
 }
