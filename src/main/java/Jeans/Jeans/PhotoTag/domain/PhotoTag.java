@@ -3,10 +3,7 @@ package Jeans.Jeans.PhotoTag.domain;
 import Jeans.Jeans.Photo.domain.Photo;
 import Jeans.Jeans.Tag.domain.Tag;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -24,4 +21,10 @@ public class PhotoTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
+
+    @Builder
+    public PhotoTag(Photo photo, Tag tag){
+        this.photo = photo;
+        this.tag = tag;
+    }
 }

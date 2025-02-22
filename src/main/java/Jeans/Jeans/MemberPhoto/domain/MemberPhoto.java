@@ -3,10 +3,7 @@ package Jeans.Jeans.MemberPhoto.domain;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Photo.domain.Photo;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -28,4 +25,11 @@ public class MemberPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", nullable = false)
     private Member receiver;
+
+    @Builder
+    public MemberPhoto(Photo photo, Member sharer, Member receiver){
+        this.photo = photo;
+        this.sharer = sharer;
+        this.receiver = receiver;
+    }
 }
