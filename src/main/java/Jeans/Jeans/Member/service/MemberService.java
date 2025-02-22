@@ -125,6 +125,13 @@ public class MemberService {
         return "회원탈퇴가 완료되었습니다.";
     }
 
+    // 본인 확인
+    public MemberCheckResDto checkMember(MemberCheckReqDto checkReqDto){
+        Member member = memberRepository.findByBirthdayAndPhone(checkReqDto.getBirthday(), checkReqDto.getPhone())
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
+        return new MemberCheckResDto(member.getMemberId());
+    }
+
     // 비밀번호 변경
     public void changePassword(PasswordChangeDto requestDto) {
         Member member = memberRepository.findByBirthdayAndPhone(requestDto.getBirthday(), requestDto.getPhone())
