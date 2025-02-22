@@ -48,6 +48,10 @@ public class Member {
         this.profileUrl = profileUrl;
     }
 
+    public void updateName(String name){
+        this.name = name;
+    }
+
     public void updatePassword(String password){
         this.password = password;
     }

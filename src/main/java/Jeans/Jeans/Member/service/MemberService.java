@@ -134,6 +134,12 @@ public class MemberService {
         return "본인 확인이 완료되었습니다.";
     }
 
+    // 이름 변경
+    public void changeName(Member user, NameChangeReqDto requestDto){
+        user.updateName(requestDto.getNewName());
+        memberRepository.save(user);
+    }
+
     // 비밀번호 변경
     public void changePassword(Member user, PasswordChangeReqDto requestDto) {
         user.updatePassword(encoder.encode(requestDto.getNewPassword()));
@@ -143,6 +149,11 @@ public class MemberService {
     // 내 정보 조회
     public ProfileResponseDto getMyProfile(Member member){
         return new ProfileResponseDto(member.getName(), member.getProfileUrl(), member.getBirthday(), member.getPhone());
+    }
+
+    // 음성 타입 조회
+    public VoiceTypeResDto getMyAgentType(Member member){
+        return new VoiceTypeResDto(member.getVoiceType());
     }
 
     // 기본 보정 설정

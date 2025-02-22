@@ -71,6 +71,14 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 이름 변경
+    @PatchMapping("/my/name")
+    public ResponseEntity<String> changePassword(@RequestBody NameChangeReqDto changeReqDto) {
+        Member user = memberService.getLoginMember();
+        memberService.changeName(user, changeReqDto);
+        return ResponseEntity.ok("이름이 변경되었습니다.");
+    }
+
     // 비밀번호 변경
     @PatchMapping("/my/password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeReqDto changeReqDto) {
@@ -85,6 +93,14 @@ public class MemberController {
     public ProfileResponseDto getMyProfile(){
         Member member = memberService.getLoginMember();
         return memberService.getMyProfile(member);
+    }
+
+    // 음성 타입 조회
+    @GetMapping("/my/voice")
+    @ResponseStatus(value = HttpStatus.OK)
+    public VoiceTypeResDto getVoiceType(){
+        Member member = memberService.getLoginMember();
+        return memberService.getMyAgentType(member);
     }
 
     // 기본 보정 설정
