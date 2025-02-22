@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
@@ -46,5 +46,9 @@ public class Member {
 
     public void updateProfile(String profileUrl){
         this.profileUrl = profileUrl;
+    }
+
+    public void updatePassword(String password){
+        this.password = password;
     }
 }
