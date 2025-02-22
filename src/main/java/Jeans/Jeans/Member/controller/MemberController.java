@@ -68,7 +68,7 @@ public class MemberController {
     public ResponseEntity<String> checkMember(@RequestParam String birthday, @RequestParam String phone){
         Member user = memberService.getLoginMember();
         String response = memberService.checkMember(user, birthday, phone);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 비밀번호 변경
