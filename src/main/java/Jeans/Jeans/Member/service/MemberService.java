@@ -151,6 +151,11 @@ public class MemberService {
         return new ProfileResponseDto(member.getName(), member.getProfileUrl(), member.getBirthday(), member.getPhone());
     }
 
+    // 음성 타입 조회
+    public VoiceTypeResDto getMyAgentType(Member member){
+        return new VoiceTypeResDto(member.getVoiceType());
+    }
+
     // 기본 보정 설정
     public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
         BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());

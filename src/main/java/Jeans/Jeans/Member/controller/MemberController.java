@@ -95,6 +95,14 @@ public class MemberController {
         return memberService.getMyProfile(member);
     }
 
+    // 음성 타입 조회
+    @GetMapping("/my/voice")
+    @ResponseStatus(value = HttpStatus.OK)
+    public VoiceTypeResDto getVoiceType(){
+        Member member = memberService.getLoginMember();
+        return memberService.getMyAgentType(member);
+    }
+
     // 기본 보정 설정
     @PostMapping("/my/basic")
     public ResponseEntity<String> createBasicEdit(@RequestBody BasicEditRequestDto requestDto){
