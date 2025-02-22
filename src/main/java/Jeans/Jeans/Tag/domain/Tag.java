@@ -1,10 +1,7 @@
 package Jeans.Jeans.Tag.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -17,4 +14,9 @@ public class Tag {
 
     @Column(nullable = false)
     private String name;
+
+    @Builder
+    public Tag(String name){
+        this.name = name;
+    }
 }

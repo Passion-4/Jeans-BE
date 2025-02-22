@@ -3,10 +3,7 @@ package Jeans.Jeans.Photo.domain;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Team.domain.Team;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -35,4 +32,13 @@ public class Photo {
 
     @Column(nullable = false)
     private LocalDate photoDate;
+
+    @Builder
+    public Photo(Member member, Team team, String photoUrl, String title, LocalDate photoDate){
+        this.member = member;
+        this.team = team;
+        this.photoUrl = photoUrl;
+        this.title = title;
+        this.photoDate = photoDate;
+    }
 }
