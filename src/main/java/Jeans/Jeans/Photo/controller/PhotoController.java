@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,5 +55,14 @@ public class PhotoController {
     public List<PhotoDto> getFeedPhotos(){
         Member member = memberService.getLoginMember();
         return photoService.getFeedPhotos(member);
+    }
+
+    // 사진 공유 취소
+    @DeleteMapping("/photos/{photo_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<String> deletePhoto(@PathVariable("photo_id") Long photoId){
+        Member member = memberService.getLoginMember();
+        photoService.deletePhoto(member, photoId);
+        return ResponseEntity.ok("사진이 삭제되었습니다.");
     }
 }

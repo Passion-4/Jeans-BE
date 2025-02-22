@@ -1,5 +1,6 @@
 package Jeans.Jeans.Photo.service;
 
+import Jeans.Jeans.Emoticon.repository.EmoticonRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.MemberPhoto.domain.MemberPhoto;
@@ -18,9 +19,11 @@ import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
 import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
+import Jeans.Jeans.Voice.repository.VoiceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -35,6 +38,8 @@ public class PhotoService {
     private final PhotoTagRepository photoTagRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
+    private final VoiceRepository voiceRepository;
+    private final EmoticonRepository emoticonRepository;
 
     // 친구에게 사진 공유
     public PhotoShareResDto shareFriendPhoto(Member user, String photoUrl, FriendShareReqDto shareReqDto){
@@ -120,5 +125,32 @@ public class PhotoService {
         }
 
         return photoDtoList;
+    }
+
+    // 사진 공유 취소
+    @Transactional
+    public String deletePhoto(Member member, Long photoId){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+
+        if (!photo.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 사용자가 공유한 사진이 아닙니다.");
+        }
+
+        memberPhotoRepository.deleteAllByPhoto(photo);
+        photoTagRepository.deleteAllByPhoto(photo);
+        voiceRepository.deleteAllByPhoto(photo);
+        emoticonRepository.deleteAllByPhoto(photo);
+
+        Team team = photo.getTeam();
+
+        photoRepository.delete(photo);
+
+        if (team != null && !photoRepository.existsByTeam(team)) {
+            teamMemberRepository.deleteAllByTeam(team);
+            teamRepository.delete(team);
+        }
+
+        return "사진이 삭제되었습니다.";
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findAllByTeam(Team team);
+    Boolean existsByTeam(Team team);
 }
