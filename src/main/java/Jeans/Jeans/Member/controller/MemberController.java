@@ -68,7 +68,7 @@ public class MemberController {
     public ResponseEntity<String> checkMember(@RequestParam String birthday, @RequestParam String phone){
         Member user = memberService.getLoginMember();
         String response = memberService.checkMember(user, birthday, phone);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 비밀번호 변경
@@ -77,6 +77,14 @@ public class MemberController {
         Member user = memberService.getLoginMember();
         memberService.changePassword(user, changeReqDto);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
+    // 내 정보 조회
+    @GetMapping("/my/profile")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ProfileResponseDto getMyProfile(){
+        Member member = memberService.getLoginMember();
+        return memberService.getMyProfile(member);
     }
 
     // 기본 보정 설정
