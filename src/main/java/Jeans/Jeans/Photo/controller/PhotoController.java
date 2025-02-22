@@ -4,6 +4,7 @@ import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.service.MemberService;
 import Jeans.Jeans.Photo.dto.FriendShareReqDto;
 import Jeans.Jeans.Photo.dto.PhotoShareResDto;
+import Jeans.Jeans.Photo.dto.TeamShareReqDto;
 import Jeans.Jeans.Photo.service.PhotoService;
 import Jeans.Jeans.global.service.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,5 +35,16 @@ public class PhotoController {
         Member user = memberService.getLoginMember();
         String photoUrl = s3Uploader.upload(image, "friend-shared-image");
         return photoService.shareFriendPhoto(user, photoUrl, shareReqDto);
+    }
+
+    // 팀에게 사진 공유
+    @PostMapping(value = "/photo/team-share", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public PhotoShareResDto shareTeamPhoto(@RequestPart(value = "image") MultipartFile image,
+                                           @RequestParam(value = "dto") String dtoJson) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        TeamShareReqDto shareReqDto = objectMapper.readValue(dtoJson, TeamShareReqDto.class);
+        Member user = memberService.getLoginMember();
+        String photoUrl = s3Uploader.upload(image, "team-shared-image");
+        return photoService.shareTeamPhoto(user, photoUrl, shareReqDto);
     }
 }
