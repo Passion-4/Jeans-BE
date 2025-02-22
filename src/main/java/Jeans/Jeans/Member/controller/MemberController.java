@@ -71,6 +71,14 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    // 이름 변경
+    @PatchMapping("/my/name")
+    public ResponseEntity<String> changePassword(@RequestBody NameChangeReqDto changeReqDto) {
+        Member user = memberService.getLoginMember();
+        memberService.changeName(user, changeReqDto);
+        return ResponseEntity.ok("이름이 변경되었습니다.");
+    }
+
     // 비밀번호 변경
     @PatchMapping("/my/password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeReqDto changeReqDto) {

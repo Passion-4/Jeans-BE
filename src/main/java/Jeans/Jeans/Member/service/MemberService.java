@@ -134,6 +134,12 @@ public class MemberService {
         return "본인 확인이 완료되었습니다.";
     }
 
+    // 이름 변경
+    public void changeName(Member user, NameChangeReqDto requestDto){
+        user.updateName(requestDto.getNewName());
+        memberRepository.save(user);
+    }
+
     // 비밀번호 변경
     public void changePassword(Member user, PasswordChangeReqDto requestDto) {
         user.updatePassword(encoder.encode(requestDto.getNewPassword()));
