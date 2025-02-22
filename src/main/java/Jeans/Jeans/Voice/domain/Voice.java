@@ -2,6 +2,7 @@ package Jeans.Jeans.Voice.domain;
 
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Photo.domain.Photo;
+import Jeans.Jeans.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Voice {
+public class Voice extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)

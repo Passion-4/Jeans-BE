@@ -2,6 +2,7 @@ package Jeans.Jeans.Photo.domain;
 
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Team.domain.Team;
+import Jeans.Jeans.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Photo {
+public class Photo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
