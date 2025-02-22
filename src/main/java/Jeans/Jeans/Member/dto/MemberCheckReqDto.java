@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PasswordChangeDto {
+public class MemberCheckReqDto {
     private String birthday;
     private String phone;
-    private String newPassword;
 }

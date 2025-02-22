@@ -11,7 +11,6 @@ import Jeans.Jeans.Member.dto.*;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.dto.TargetTeamDto;
-import Jeans.Jeans.Team.dto.TeamDto;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
 import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
@@ -125,11 +124,18 @@ public class MemberService {
         return "회원탈퇴가 완료되었습니다.";
     }
 
-    // 비밀번호 변경
-    public void changePassword(PasswordChangeDto requestDto) {
-        Member member = memberRepository.findByBirthdayAndPhone(requestDto.getBirthday(), requestDto.getPhone())
+    // 본인 확인
+    public MemberCheckResDto checkMember(MemberCheckReqDto checkReqDto){
+        Member member = memberRepository.findByBirthdayAndPhone(checkReqDto.getBirthday(), checkReqDto.getPhone())
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 회원이 없습니다."));
-        member.setPassword(encoder.encode(requestDto.getNewPassword()));
+        return new MemberCheckResDto(member.getMemberId());
+    }
+
+    // 비밀번호 변경
+    public void changePassword(PasswordChangeReqDto requestDto) {
+        Member member = memberRepository.findById(requestDto.getMemberId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 memberId의 회원이 존재하지 않습니다."));
+        member.updatePassword(encoder.encode(requestDto.getNewPassword()));
         memberRepository.save(member);
     }
 

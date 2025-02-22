@@ -50,7 +50,7 @@ public class SecurityConfig {
         httpSecurity.httpBasic(AbstractHttpConfigurer::disable);
 
         httpSecurity.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/members/signup", "/members/login", "/members/refreshtoken", "/code/request", "/code/verify", "/my/password").permitAll()
+                .requestMatchers("/members/signup", "/members/login", "/members/refreshtoken", "/code/request", "/code/verify", "/my/check", "/my/password").permitAll()
                 .anyRequest().authenticated()
         );
         httpSecurity.addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class);

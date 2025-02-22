@@ -63,10 +63,16 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.delete(authentication));
     }
 
+    //본인 확인
+    @GetMapping("/my/check")
+    public MemberCheckResDto checkMember(@RequestBody MemberCheckReqDto checkReqDto){
+        return memberService.checkMember(checkReqDto);
+    }
+
     // 비밀번호 변경
     @PatchMapping("/my/password")
-    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
-        memberService.changePassword(passwordChangeDto);
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeReqDto changeReqDto) {
+        memberService.changePassword(changeReqDto);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
 
