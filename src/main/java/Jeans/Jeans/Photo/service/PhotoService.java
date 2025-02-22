@@ -7,11 +7,14 @@ import Jeans.Jeans.MemberPhoto.repository.MemberPhotoRepository;
 import Jeans.Jeans.Photo.domain.Photo;
 import Jeans.Jeans.Photo.dto.FriendShareReqDto;
 import Jeans.Jeans.Photo.dto.PhotoShareResDto;
+import Jeans.Jeans.Photo.dto.TeamShareReqDto;
 import Jeans.Jeans.Photo.repository.PhotoRepository;
 import Jeans.Jeans.PhotoTag.domain.PhotoTag;
 import Jeans.Jeans.PhotoTag.repository.PhotoTagRepository;
 import Jeans.Jeans.Tag.domain.Tag;
 import Jeans.Jeans.Tag.repository.TagRepository;
+import Jeans.Jeans.Team.domain.Team;
+import Jeans.Jeans.Team.repository.TeamRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ public class PhotoService {
     private final MemberRepository memberRepository;
     private final TagRepository tagRepository;
     private final PhotoTagRepository photoTagRepository;
+    private final TeamRepository teamRepository;
 
     // 친구에게 사진 공유
     public PhotoShareResDto shareFriendPhoto(Member user, String photoUrl, FriendShareReqDto shareReqDto){
@@ -42,6 +46,29 @@ public class PhotoService {
                     .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 회원이 존재하지 않습니다."));
             memberPhotoRepository.save(new MemberPhoto(photo, user, friend));
         }
+
+        List<String> tagNameList = new ArrayList<>(Arrays.asList("테스트 태그1", "테스트 태그2", "테스트 태그3"));
+
+        for (String tagName : tagNameList){
+            Tag tag = tagRepository.findByName(tagName);
+
+            if (tag == null) {
+                tag = new Tag(tagName);
+                tagRepository.save(tag);
+            }
+
+            photoTagRepository.save(new PhotoTag(photo, tag));
+        }
+        return new PhotoShareResDto(photoUrl);
+    }
+
+    // 팀에게 사진 공유
+    public PhotoShareResDto shareTeamPhoto(Member user, String photoUrl, TeamShareReqDto shareReqDto){
+        Long teamId = shareReqDto.getTeamId();
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 팀이 존재하지 않습니다."));
+        Photo photo = new Photo(user, team, photoUrl, "테스트 제목", LocalDate.of(2025, 2, 23));
+        photoRepository.save(photo);
 
         List<String> tagNameList = new ArrayList<>(Arrays.asList("테스트 태그1", "테스트 태그2", "테스트 태그3"));
 
