@@ -140,6 +140,11 @@ public class MemberService {
         memberRepository.save(user);
     }
 
+    // 내 정보 조회
+    public ProfileResponseDto getMyProfile(Member member){
+        return new ProfileResponseDto(member.getName(), member.getProfileUrl(), member.getBirthday(), member.getPhone());
+    }
+
     // 기본 보정 설정
     public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
         BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());

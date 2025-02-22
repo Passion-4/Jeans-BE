@@ -79,6 +79,14 @@ public class MemberController {
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
 
+    // 내 정보 조회
+    @GetMapping("/my/profile")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ProfileResponseDto getMyProfile(){
+        Member member = memberService.getLoginMember();
+        return memberService.getMyProfile(member);
+    }
+
     // 기본 보정 설정
     @PostMapping("/my/basic")
     public ResponseEntity<String> createBasicEdit(@RequestBody BasicEditRequestDto requestDto){
