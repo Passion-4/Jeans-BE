@@ -27,4 +27,8 @@ public class Team {
     public void updateName(String name){
         this.name = name;
     }
+
+    public void updateImage(String imageUrl){
+        this.imageUrl = imageUrl;
+    }
 }
