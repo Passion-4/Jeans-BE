@@ -92,6 +92,33 @@ public class PhotoService {
         return new PhotoShareResDto(photoUrl);
     }
 
+    // 사진 공유 취소
+    @Transactional
+    public String deletePhoto(Member member, Long photoId){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+
+        if (!photo.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 사용자가 공유한 사진이 아닙니다.");
+        }
+
+        memberPhotoRepository.deleteAllByPhoto(photo);
+        photoTagRepository.deleteAllByPhoto(photo);
+        voiceRepository.deleteAllByPhoto(photo);
+        emoticonRepository.deleteAllByPhoto(photo);
+
+        Team team = photo.getTeam();
+
+        photoRepository.delete(photo);
+
+        if (team != null && !photoRepository.existsByTeam(team)) {
+            teamMemberRepository.deleteAllByTeam(team);
+            teamRepository.delete(team);
+        }
+
+        return "사진이 삭제되었습니다.";
+    }
+
     // 내 피드 조회
     public List<PhotoDto> getFeedPhotos(Member member){
         List<PhotoDto> photoDtoList = new ArrayList<>();
@@ -125,32 +152,5 @@ public class PhotoService {
         }
 
         return photoDtoList;
-    }
-
-    // 사진 공유 취소
-    @Transactional
-    public String deletePhoto(Member member, Long photoId){
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
-
-        if (!photo.getMember().equals(member)) {
-            throw new IllegalArgumentException("해당 사용자가 공유한 사진이 아닙니다.");
-        }
-
-        memberPhotoRepository.deleteAllByPhoto(photo);
-        photoTagRepository.deleteAllByPhoto(photo);
-        voiceRepository.deleteAllByPhoto(photo);
-        emoticonRepository.deleteAllByPhoto(photo);
-
-        Team team = photo.getTeam();
-
-        photoRepository.delete(photo);
-
-        if (team != null && !photoRepository.existsByTeam(team)) {
-            teamMemberRepository.deleteAllByTeam(team);
-            teamRepository.delete(team);
-        }
-
-        return "사진이 삭제되었습니다.";
     }
 }

@@ -49,14 +49,6 @@ public class PhotoController {
         return photoService.shareTeamPhoto(user, photoUrl, shareReqDto);
     }
 
-    // 내 피드 조회
-    @GetMapping("/feed")
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<PhotoDto> getFeedPhotos(){
-        Member member = memberService.getLoginMember();
-        return photoService.getFeedPhotos(member);
-    }
-
     // 사진 공유 취소
     @DeleteMapping("/photos/{photo_id}")
     @ResponseStatus(value = HttpStatus.OK)
@@ -64,5 +56,13 @@ public class PhotoController {
         Member member = memberService.getLoginMember();
         photoService.deletePhoto(member, photoId);
         return ResponseEntity.ok("사진이 삭제되었습니다.");
+    }
+
+    // 내 피드 조회
+    @GetMapping("/feed")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<PhotoDto> getFeedPhotos(){
+        Member member = memberService.getLoginMember();
+        return photoService.getFeedPhotos(member);
     }
 }
