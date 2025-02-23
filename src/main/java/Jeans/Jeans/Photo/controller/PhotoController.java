@@ -49,6 +49,15 @@ public class PhotoController {
         return photoService.shareTeamPhoto(user, photoUrl, shareReqDto);
     }
 
+    // 사진 공유 취소
+    @DeleteMapping("/photos/{photo_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<String> deletePhoto(@PathVariable("photo_id") Long photoId){
+        Member member = memberService.getLoginMember();
+        photoService.deletePhoto(member, photoId);
+        return ResponseEntity.ok("사진이 삭제되었습니다.");
+    }
+
     // 내 피드 조회
     @GetMapping("/feed")
     @ResponseStatus(value = HttpStatus.OK)
@@ -57,12 +66,19 @@ public class PhotoController {
         return photoService.getFeedPhotos(member);
     }
 
-    // 사진 공유 취소
-    @DeleteMapping("/photos/{photo_id}")
+    // 친구별 공유한 사진 목록 조회
+    @GetMapping("/friend-photos/{member_id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> deletePhoto(@PathVariable("photo_id") Long photoId){
-        Member member = memberService.getLoginMember();
-        photoService.deletePhoto(member, photoId);
-        return ResponseEntity.ok("사진이 삭제되었습니다.");
+    public List<PhotoDto> getFriendPhotos(@PathVariable("member_id") Long memberId){
+        Member user = memberService.getLoginMember();
+        return photoService.getFriendPhotos(user, memberId);
+    }
+
+    // 팀별 공유한 사진 목록 조회
+    @GetMapping("/team-photos/{team_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<PhotoDto> getTeamPhotos(@PathVariable("team_id") Long teamId){
+        Member user = memberService.getLoginMember();
+        return photoService.getTeamPhotos(user, teamId);
     }
 }
