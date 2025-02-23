@@ -73,4 +73,12 @@ public class PhotoController {
         Member user = memberService.getLoginMember();
         return photoService.getFriendPhotos(user, memberId);
     }
+
+    // 팀별 공유한 사진 목록 조회
+    @GetMapping("/team-photos/{team_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<PhotoDto> getTeamPhotos(@PathVariable("team_id") Long teamId){
+        Member user = memberService.getLoginMember();
+        return photoService.getTeamPhotos(user, teamId);
+    }
 }

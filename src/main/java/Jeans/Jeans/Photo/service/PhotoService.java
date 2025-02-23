@@ -157,7 +157,7 @@ public class PhotoService {
     // 친구별 공유한 사진 목록 조회
     public List<PhotoDto> getFriendPhotos(Member user, Long memberId){
         Member friend = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 사진이 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 회원이 존재하지 않습니다."));
 
         List<PhotoDto> photoDtoList = new ArrayList<>();
 
@@ -169,6 +169,22 @@ public class PhotoService {
         for (MemberPhoto memberPhoto : memberPhotos){
             photos.add(memberPhoto.getPhoto());
         }
+        photos.sort(Comparator.comparing(Photo::getCreatedDate).reversed());
+
+        for(Photo photo : photos){
+            photoDtoList.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoUrl()));
+        }
+        return photoDtoList;
+    }
+
+    // 팀별 공유한 사진 목록 조회
+    public List<PhotoDto> getTeamPhotos(Member user, Long teamId){
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 팀이 존재하지 않습니다."));
+
+        List<PhotoDto> photoDtoList = new ArrayList<>();
+
+        List<Photo> photos = photoRepository.findAllByTeam(team);
         photos.sort(Comparator.comparing(Photo::getCreatedDate).reversed());
 
         for(Photo photo : photos){
