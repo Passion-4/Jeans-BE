@@ -12,8 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -70,20 +69,43 @@ public class TeamService {
     // 기존 팀 여부 조회
     public CheckResponseDto checkTeamExists(Member member, List<Long> memberIds) {
         memberIds.add(member.getMemberId());
-        long size = memberIds.size();
-        List<Long> existingTeams = teamMemberRepository.findTeamsByMemberIds(memberIds, size);
+        List<Team> exactTeams = findTeamsWithExactMembers(memberIds);
+        if (!exactTeams.isEmpty()) {
+            // 일치하는 팀이 있는 경우
+            return new CheckResponseDto(true, exactTeams.get(0).getTeamId());
+        }
+        else {
+            // 일치하는 팀이 없는 경우
+            return new CheckResponseDto(false, null);
+        }
+    }
 
-        Boolean check = false;
-        Long teamId = null;
+    public List<Team> findTeamsWithExactMembers(List<Long> memberIds) {
+        // 팀에 속한 모든 TeamMember 정보 조회
+        List<TeamMember> allTeamMembers = teamMemberRepository.findAll();
 
-        // 이미 존재하는 팀이 있는 경우
-        if (!existingTeams.isEmpty()) {
-            check = true;
-            teamId = existingTeams.get(0);
+        // 각 팀을 그룹화하해서 그 팀에 속한 멤버들의 memberId만 추출
+        Map<Team, List<Long>> teamMemberMap = new HashMap<>();
+
+        for (TeamMember teamMember : allTeamMembers) {
+            Team team = teamMember.getTeam();
+            Long memberId = teamMember.getMember().getMemberId();
+
+            teamMemberMap.computeIfAbsent(team, k -> new ArrayList<>()).add(memberId);
         }
 
-        return new CheckResponseDto(check, teamId);
+        // 해당 memberId 리스트와 정확히 일치하는 팀만 반환
+        List<Team> exactTeams = new ArrayList<>();
+        for (Map.Entry<Team, List<Long>> entry : teamMemberMap.entrySet()) {
+            List<Long> teamMembers = entry.getValue();
+            if (teamMembers.size() == memberIds.size() && new HashSet<>(teamMembers).containsAll(memberIds)) {
+                exactTeams.add(entry.getKey());
+            }
+        }
+
+        return exactTeams;
     }
+
 
     // 팀 정보 조회
     public TeamDto getTeamInfo(Long teamId){
