@@ -153,4 +153,27 @@ public class PhotoService {
 
         return photoDtoList;
     }
+
+    // 친구별 공유한 사진 목록 조회
+    public List<PhotoDto> getFriendPhotos(Member user, Long memberId){
+        Member friend = memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("memberId가 " + memberId + "인 사진이 존재하지 않습니다."));
+
+        List<PhotoDto> photoDtoList = new ArrayList<>();
+
+        List<MemberPhoto> memberPhotos = new ArrayList<>();
+        memberPhotos.addAll(memberPhotoRepository.findAllBySharerAndReceiver(user, friend));
+        memberPhotos.addAll(memberPhotoRepository.findAllBySharerAndReceiver(friend, user));
+
+        List<Photo> photos = new ArrayList<>();
+        for (MemberPhoto memberPhoto : memberPhotos){
+            photos.add(memberPhoto.getPhoto());
+        }
+        photos.sort(Comparator.comparing(Photo::getCreatedDate).reversed());
+
+        for(Photo photo : photos){
+            photoDtoList.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoUrl()));
+        }
+        return photoDtoList;
+    }
 }

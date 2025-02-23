@@ -17,4 +17,5 @@ public interface MemberPhotoRepository extends JpaRepository<MemberPhoto, Long> 
     List<MemberPhoto> findByReceiver(Member receiver);
     List<MemberPhoto> findBySharerAndReceiverOrderByPhoto_CreatedDateDesc(Member sharer, Member receiver);
     List<MemberPhoto> findByReceiverAndSharerOrderByPhoto_CreatedDateDesc(Member receiver, Member sharer);
+    List<MemberPhoto> findAllBySharerAndReceiver(Member sharer, Member receiver);
 }

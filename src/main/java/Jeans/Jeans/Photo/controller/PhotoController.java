@@ -65,4 +65,12 @@ public class PhotoController {
         Member member = memberService.getLoginMember();
         return photoService.getFeedPhotos(member);
     }
+
+    // 친구별 공유한 사진 목록 조회
+    @GetMapping("/friend-photos/{member_id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<PhotoDto> getFriendPhotos(@PathVariable("member_id") Long memberId){
+        Member user = memberService.getLoginMember();
+        return photoService.getFriendPhotos(user, memberId);
+    }
 }
