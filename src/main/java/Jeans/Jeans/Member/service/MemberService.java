@@ -200,35 +200,38 @@ public class MemberService {
         List<Team> teams = findTeamsWithSharedPhotos(user);
         List<MemberPhoto> friendMemberPhotos = getSharedPhotosForAllFriends(user);
 
+        Set<Long> addedMemberIds = new HashSet<>();
+        Set<Long> addedTeamIds = new HashSet<>();
+
         for (MemberPhoto memberPhoto : friendMemberPhotos) {
             // sharer가 user일 경우, receiver는 friend로 설정
             Member relatedMember = memberPhoto.getSharer().equals(user) ? memberPhoto.getReceiver() : memberPhoto.getSharer();
 
-            // 해당 friend에 대한 follow 정보 조회
-            Follow follow = followRepository.findByFollowerAndFollowing(user, relatedMember);
+            if (!addedMemberIds.contains(relatedMember.getMemberId())) {
+                Follow follow = followRepository.findByFollowerAndFollowing(user, relatedMember);
+                Photo latestPhoto = memberPhoto.getPhoto();
 
-            // 최신 사진 정보 가져오기 (여기서는 예시로 latestPhoto 사용)
-            Photo latestPhoto = memberPhoto.getPhoto();  // 최신 사진을 memberPhoto에서 직접 가져옵니다.
-
-            // ChatRoomDto에 해당 정보를 담아서 추가
-            chatRoomDtoList.add(new ChatRoomDto(
-                    relatedMember.getMemberId(),
-                    null,
-                    relatedMember.getName(),
-                    relatedMember.getProfileUrl(),
-                    follow != null ? follow.getNickname() : null,
-                    latestPhoto != null ? latestPhoto.getCreatedDate() : null
-            ));
+                // ChatRoomDto에 해당 정보를 담아서 추가
+                chatRoomDtoList.add(new ChatRoomDto(
+                        relatedMember.getMemberId(), null,
+                        relatedMember.getName(),
+                        relatedMember.getProfileUrl(),
+                        follow != null ? follow.getNickname() : null,
+                        latestPhoto != null ? latestPhoto.getCreatedDate() : null
+                ));
+                addedMemberIds.add(relatedMember.getMemberId());
+            }
         }
 
         // 팀 목록에 대해 처리
         for (Team team : teams) {
-            // 최신 사진을 가져오기
-            Photo latestPhoto = photoRepository.findTopByTeamOrderByCreatedDateDesc(team);
-
-            // 최신 사진이 있을 경우에만 chatRoomDto에 추가
-            if (latestPhoto != null) {
-                chatRoomDtoList.add(new ChatRoomDto(null, team.getTeamId(), team.getName(), team.getImageUrl(), null, latestPhoto.getCreatedDate()));
+            if (!addedTeamIds.contains(team.getTeamId())) {
+                // 최신 사진을 가져오기
+                Photo latestPhoto = photoRepository.findTopByTeamOrderByCreatedDateDesc(team);
+                if (latestPhoto != null) {
+                    chatRoomDtoList.add(new ChatRoomDto(null, team.getTeamId(), team.getName(), team.getImageUrl(), null, latestPhoto.getCreatedDate()));
+                    addedTeamIds.add(team.getTeamId());
+                }
             }
         }
 
