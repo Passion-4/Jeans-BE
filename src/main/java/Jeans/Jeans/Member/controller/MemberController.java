@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -135,6 +136,14 @@ public class MemberController {
     @ResponseStatus(value = HttpStatus.OK)
     public FollowTargetDto getFollowTarget(@RequestParam String name, @RequestParam String phone){
         return memberService.getFollowTarget(name, phone);
+    }
+
+    // 홈 화면에서 친구, 팀 목록 조회
+    @GetMapping("/home-list")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<ChatRoomDto> getChatRoomList(){
+        Member user = memberService.getLoginMember();
+        return memberService.getChatRoomList(user);
     }
 
     // 사진 공유 대상 선택 시 팀, 친구 목록 조회
