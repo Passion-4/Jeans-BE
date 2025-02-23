@@ -116,14 +116,14 @@ public class MemberService {
 
     // 기본 보정 설정
     public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
-        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
     }
 
     // 기본 보정 설정 변경
     public void updateBasicEdit(Member member, BasicEditRequestDto requestDto){
         BasicEdit basicEdit = basicEditRepository.findByMember(member);
-        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3(), requestDto.getEdit4(), requestDto.getEdit5());
+        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
         basicEditRepository.save(basicEdit);
     }
 
@@ -163,5 +163,11 @@ public class MemberService {
         String phone = authentication.getName();
         return memberRepository.findByPhone(phone)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "인증된 회원 정보가 없습니다."));
+    }
+    @Transactional(readOnly = true) // JPA 조회 성능 최적화
+    public Member getMemberById(Long memberId) {
+        // ✅ memberId로 회원 정보 조회
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원 ID " + memberId + "를 찾을 수 없습니다."));
     }
 }
