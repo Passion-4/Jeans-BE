@@ -234,6 +234,8 @@ public class MemberService {
 
         // 최신순으로 정렬
         chatRoomDtoList.sort((a, b) -> b.getCreatedDate().compareTo(a.getCreatedDate()));
+        ChatRoomDto newChatRoomDto = new ChatRoomDto(user.getMemberId(), null, user.getName(), user.getProfileUrl(), "나", null);
+        chatRoomDtoList.add(0, newChatRoomDto);
         return chatRoomDtoList;
     }
 
