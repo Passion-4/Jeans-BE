@@ -11,7 +11,7 @@ public class PhotoShareResDto {
     private String photoUrl;
 
     @Builder
-    public PhotoShareResDto(String photoUrl){
+    public PhotoShareResDto(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 }

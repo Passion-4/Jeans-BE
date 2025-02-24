@@ -66,7 +66,9 @@ public class PhotoService {
 
             photoTagRepository.save(new PhotoTag(photo, tag));
         }
-        return new PhotoShareResDto(photoUrl);
+        return PhotoShareResDto.builder()
+                .photoUrl(photoUrl)
+                .build();
     }
 
     // 팀에게 사진 공유
@@ -89,7 +91,10 @@ public class PhotoService {
 
             photoTagRepository.save(new PhotoTag(photo, tag));
         }
-        return new PhotoShareResDto(photoUrl);
+        return PhotoShareResDto.builder()
+                .photoUrl(photoUrl)
+                .build();
+
     }
 
     // 사진 공유 취소
