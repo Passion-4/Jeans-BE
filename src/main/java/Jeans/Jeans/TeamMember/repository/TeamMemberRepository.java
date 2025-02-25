@@ -17,4 +17,5 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
     List<TeamMember> findAllByMember(Member member);
     void deleteAllByTeam(Team team);
     Boolean existsByMemberAndTeam(Member member, Team team);
+    List<TeamMember> findAllByTeam(Team team);
 }
