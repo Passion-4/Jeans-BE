@@ -288,4 +288,17 @@ public class PhotoService {
         emoticonRepository.save(emoticon);
         return "이모티콘이 전송되었습니다.";
     }
+
+    // 팀 채팅방에 전송된 이모티콘 목록 조회
+    public List<EmoticonDto> getEmoticonList(Long photoId){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+        List<Emoticon> emoticons = emoticonRepository.findAllByPhoto(photo);
+
+        List<EmoticonDto> emoticonDtoList = new ArrayList<>();
+        for (Emoticon emoticon : emoticons){
+            emoticonDtoList.add(new EmoticonDto(emoticon.getEmojiType(), emoticon.getSender().getName(), emoticon.getSender().getProfileUrl()));
+        }
+        return emoticonDtoList;
+    }
 }

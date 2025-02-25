@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -102,5 +103,12 @@ public class PhotoController {
         Member user = memberService.getLoginMember();
         String response = photoService.sendEmoticon(photoId, user, type);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // 팀 채팅방에 전송된 이모티콘 목록 조회
+    @GetMapping("/team-photos/{photo_id}/emoticons")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<EmoticonDto> getEmoticonList(@PathVariable("photo_id") Long photoId){
+        return photoService.getEmoticonList(photoId);
     }
 }
