@@ -2,10 +2,7 @@ package Jeans.Jeans.Photo.controller;
 
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.service.MemberService;
-import Jeans.Jeans.Photo.dto.FriendShareReqDto;
-import Jeans.Jeans.Photo.dto.PhotoDto;
-import Jeans.Jeans.Photo.dto.PhotoShareResDto;
-import Jeans.Jeans.Photo.dto.TeamShareReqDto;
+import Jeans.Jeans.Photo.dto.*;
 import Jeans.Jeans.Photo.service.PhotoService;
 import Jeans.Jeans.global.service.S3Uploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,5 +77,13 @@ public class PhotoController {
     public List<PhotoDto> getTeamPhotos(@PathVariable("team_id") Long teamId){
         Member user = memberService.getLoginMember();
         return photoService.getTeamPhotos(user, teamId);
+    }
+
+    // 개인에게 공유한 사진 상세 조회
+    @GetMapping("/friend-photos/{photo_id}/detail")
+    @ResponseStatus(value = HttpStatus.OK)
+    public FriendPhotoDetailDto getFriendPhotoDetail(@PathVariable("photo_id") Long photoId){
+        Member user = memberService.getLoginMember();
+        return photoService.getFriendPhotoDetail(user, photoId);
     }
 }
