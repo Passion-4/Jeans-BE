@@ -149,8 +149,8 @@ public class PhotoService {
         }
 
         photoList.sort(Comparator.comparing(Photo::getPhotoId).reversed());
-        for (Photo photo : photoList){
-            Boolean isTeam = photo.getTeam() != null && photo.getTeam().getTeamId() != null;
+        for (Photo photo : photoList) {
+            Boolean isTeam = photo.getTeam() != null;
             feedPhotoDtoList.add(new FeedPhotoDto(photo.getPhotoId(), photo.getPhotoUrl(), isTeam));
         }
         return feedPhotoDtoList;
