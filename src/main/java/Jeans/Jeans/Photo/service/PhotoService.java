@@ -122,8 +122,8 @@ public class PhotoService {
     }
 
     // 내 피드 조회
-    public List<PhotoDto> getFeedPhotos(Member member){
-        List<PhotoDto> photoDtoList = new ArrayList<>();
+    public List<FeedPhotoDto> getFeedPhotos(Member member){
+        List<FeedPhotoDto> feedPhotoDtoList = new ArrayList<>();
         List<Photo> photoList = new ArrayList<>();
 
         List<TeamMember> teamMembers = teamMemberRepository.findAllByMember(member);
@@ -150,10 +150,10 @@ public class PhotoService {
 
         photoList.sort(Comparator.comparing(Photo::getPhotoId).reversed());
         for (Photo photo : photoList){
-            photoDtoList.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoUrl()));
+            Boolean isTeam = photo.getTeam() != null && photo.getTeam().getTeamId() != null;
+            feedPhotoDtoList.add(new FeedPhotoDto(photo.getPhotoId(), photo.getPhotoUrl(), isTeam));
         }
-
-        return photoDtoList;
+        return feedPhotoDtoList;
     }
 
     // 친구별 공유한 사진 목록 조회

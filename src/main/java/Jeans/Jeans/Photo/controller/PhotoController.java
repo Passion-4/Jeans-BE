@@ -60,7 +60,7 @@ public class PhotoController {
     // 내 피드 조회
     @GetMapping("/feed")
     @ResponseStatus(value = HttpStatus.OK)
-    public List<PhotoDto> getFeedPhotos(){
+    public List<FeedPhotoDto> getFeedPhotos(){
         Member member = memberService.getLoginMember();
         return photoService.getFeedPhotos(member);
     }
