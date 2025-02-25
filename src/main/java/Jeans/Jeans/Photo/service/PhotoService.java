@@ -1,15 +1,13 @@
 package Jeans.Jeans.Photo.service;
 
+import Jeans.Jeans.Emoticon.domain.Emoticon;
 import Jeans.Jeans.Emoticon.repository.EmoticonRepository;
 import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Member.repository.MemberRepository;
 import Jeans.Jeans.MemberPhoto.domain.MemberPhoto;
 import Jeans.Jeans.MemberPhoto.repository.MemberPhotoRepository;
 import Jeans.Jeans.Photo.domain.Photo;
-import Jeans.Jeans.Photo.dto.FriendShareReqDto;
-import Jeans.Jeans.Photo.dto.PhotoDto;
-import Jeans.Jeans.Photo.dto.PhotoShareResDto;
-import Jeans.Jeans.Photo.dto.TeamShareReqDto;
+import Jeans.Jeans.Photo.dto.*;
 import Jeans.Jeans.Photo.repository.PhotoRepository;
 import Jeans.Jeans.PhotoTag.domain.PhotoTag;
 import Jeans.Jeans.PhotoTag.repository.PhotoTagRepository;
@@ -19,15 +17,19 @@ import Jeans.Jeans.Team.domain.Team;
 import Jeans.Jeans.Team.repository.TeamRepository;
 import Jeans.Jeans.TeamMember.domain.TeamMember;
 import Jeans.Jeans.TeamMember.repository.TeamMemberRepository;
+import Jeans.Jeans.Voice.domain.Voice;
+import Jeans.Jeans.Voice.dto.VoiceDto;
 import Jeans.Jeans.Voice.repository.VoiceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PhotoService {
@@ -191,5 +193,46 @@ public class PhotoService {
             photoDtoList.add(new PhotoDto(photo.getPhotoId(), photo.getPhotoUrl()));
         }
         return photoDtoList;
+    }
+
+    // 개인에게 공유한 사진 상세 조회
+    public FriendPhotoDetailDto getFriendPhotoDetail(Member user, Long photoId) {
+        List<VoiceDto> voiceDtoList = new ArrayList<>();
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+        List<Voice> voices = voiceRepository.findAllByPhoto(photo);
+        Boolean isUser = false;
+
+        List<MemberPhoto> memberPhotos = memberPhotoRepository.findAllByPhoto(photo);
+        Member friend;
+        for (MemberPhoto memberPhoto : memberPhotos) {
+            if (!memberPhoto.getSharer().equals(user)) {
+                friend = memberPhoto.getSharer();
+            } else {
+                friend = memberPhoto.getReceiver();
+            }
+        }
+
+        Optional<Emoticon> emoticonOptional = emoticonRepository.findByPhoto(photo);
+        Emoticon emoticon = null;
+        Integer emojiType = 0;
+        if (emoticonOptional.isPresent()) {
+            emoticon = emoticonOptional.get();
+            emojiType = emoticon.getEmojiType();
+        }
+
+        for (Voice voice : voices) {
+            Member member = voice.getMember();
+            if (member.equals(user)) {
+                isUser = true;
+            }
+            voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
+        }
+        return new FriendPhotoDetailDto(photoId,
+                photo.getTitle(),
+                photo.getPhotoDate(),
+                emojiType,
+                voiceDtoList
+        );
     }
 }
