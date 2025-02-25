@@ -35,7 +35,8 @@ public class PhotoController {
 
         Member user = memberService.getLoginMember();
         String photoUrl = s3Uploader.upload(image, "friend-shared-image");
-        return photoService.shareFriendPhoto(user, photoUrl, shareReqDto);
+        PhotoShareResDto aiData = photoService.analyzePhoto(image, photoUrl);
+        return photoService.shareFriendPhoto(user, photoUrl, shareReqDto, aiData);
     }
 
     // 팀에게 사진 공유
@@ -46,7 +47,10 @@ public class PhotoController {
         TeamShareReqDto shareReqDto = objectMapper.readValue(dtoJson, TeamShareReqDto.class);
         Member user = memberService.getLoginMember();
         String photoUrl = s3Uploader.upload(image, "team-shared-image");
-        return photoService.shareTeamPhoto(user, photoUrl, shareReqDto);
+        PhotoShareResDto aiData = photoService.analyzePhoto(image, photoUrl);
+
+        // ✅ 올바르게 수정된 메서드 호출
+        return photoService.shareTeamPhoto(user, photoUrl, shareReqDto, aiData);
     }
 
     // 사진 공유 취소
