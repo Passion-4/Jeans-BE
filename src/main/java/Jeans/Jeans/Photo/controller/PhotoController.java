@@ -94,4 +94,13 @@ public class PhotoController {
         Member user = memberService.getLoginMember();
         return photoService.getTeamPhotoDetail(user, photoId);
     }
+
+    // 이모티콘 전송
+    @PostMapping("/photos/{photo_id}/emoticon/{type}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<String> sendEmoticon(@PathVariable("photo_id") Long photoId, @PathVariable("type") Integer type){
+        Member user = memberService.getLoginMember();
+        String response = photoService.sendEmoticon(photoId, user, type);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }

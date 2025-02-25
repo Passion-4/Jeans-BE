@@ -1,6 +1,7 @@
 package Jeans.Jeans.Emoticon.repository;
 
 import Jeans.Jeans.Emoticon.domain.Emoticon;
+import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Photo.domain.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,6 @@ import java.util.Optional;
 public interface EmoticonRepository extends JpaRepository<Emoticon, Long> {
     void deleteAllByPhoto(Photo photo);
     Optional<Emoticon> findByPhoto(Photo photo);
-
     List<Emoticon> findAllByPhoto(Photo photo);
+    Optional<Emoticon> findByPhotoAndSender(Photo photo, Member sender);
 }
