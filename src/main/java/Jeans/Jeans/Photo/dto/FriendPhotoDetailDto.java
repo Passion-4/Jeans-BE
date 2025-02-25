@@ -13,14 +13,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FriendPhotoDetailDto {
     private Long photoId;
+    private String photoUrl;
     private String title;
     private LocalDate date;
     private Integer emojiType;
     private List<VoiceDto> voiceList;
 
     @Builder
-    public FriendPhotoDetailDto(Long photoId, String title, LocalDate date, Integer emojiType, List<VoiceDto> voiceList){
+    public FriendPhotoDetailDto(Long photoId, String photoUrl, String title, LocalDate date, Integer emojiType, List<VoiceDto> voiceList){
         this.photoId = photoId;
+        this.photoUrl = photoUrl;
         this.title = title;
         this.date = date;
         this.emojiType = emojiType;
