@@ -23,7 +23,7 @@ public class TeamService {
 
 
     // 팀 생성
-    public String createTeam(Member user, TeamRequestDto requestDto){
+    public TeamResponseDto createTeam(Member user, TeamRequestDto requestDto){
         Team team = new Team(requestDto.getName(), null);
         teamRepository.save(team);
 
@@ -36,7 +36,7 @@ public class TeamService {
             TeamMember teamMember1 = new TeamMember(member, team);
             teamMemberRepository.save(teamMember1);
         }
-        return "팀이 생성되었습니다.";
+        return new TeamResponseDto(team.getTeamId());
     }
 
     // 팀명 수정

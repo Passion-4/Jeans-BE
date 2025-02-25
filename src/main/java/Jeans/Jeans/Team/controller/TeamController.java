@@ -27,10 +27,9 @@ public class TeamController {
 
     // 팀 생성
     @PostMapping("/team")
-    public ResponseEntity<String> createTeam(@RequestBody TeamRequestDto teamRequestDto){
+    public TeamResponseDto createTeam(@RequestBody TeamRequestDto teamRequestDto){
         Member member = memberService.getLoginMember();
-        String response = teamService.createTeam(member, teamRequestDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return teamService.createTeam(member, teamRequestDto);
     }
 
     // 팀명 수정
