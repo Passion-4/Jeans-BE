@@ -214,11 +214,12 @@ public class PhotoService {
         }
 
         Optional<Emoticon> emoticonOptional = emoticonRepository.findByPhoto(photo);
-        Emoticon emoticon = null;
         Integer emojiType = 0;
         if (emoticonOptional.isPresent()) {
-            emoticon = emoticonOptional.get();
-            emojiType = emoticon.getEmojiType();
+            Emoticon emoticon = emoticonOptional.get();
+            if (emoticon.getSender() != null && !emoticon.getSender().equals(user)) {
+                emojiType = emoticon.getEmojiType();
+            }
         }
 
         for (Voice voice : voices) {
