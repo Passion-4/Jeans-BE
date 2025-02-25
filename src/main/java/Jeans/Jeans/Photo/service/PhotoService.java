@@ -270,4 +270,22 @@ public class PhotoService {
                 voiceDtoList
         );
     }
+
+    // 이모티콘 전송
+    public String sendEmoticon(Long photoId, Member user, Integer emojiType){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+
+        Emoticon emoticon = emoticonRepository.findByPhotoAndSender(photo, user)
+                .orElse(null);
+
+        if (emoticon != null) {
+            emoticon.updateEmojiType(emojiType);
+        } else {
+            emoticon = new Emoticon(photo, user, emojiType);
+        }
+
+        emoticonRepository.save(emoticon);
+        return "이모티콘이 전송되었습니다.";
+    }
 }
