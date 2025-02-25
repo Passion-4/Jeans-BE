@@ -235,4 +235,39 @@ public class PhotoService {
                 voiceDtoList
         );
     }
+
+    // 팀에게 공유한 사진 상세 조회
+    public TeamPhotoDetailDto getTeamPhotoDetail(Member user, Long photoId){
+        List<VoiceDto> voiceDtoList = new ArrayList<>();
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+        List<Voice> voices = voiceRepository.findAllByPhoto(photo);
+        Boolean isUser = false;
+
+        Team team = photo.getTeam();
+        List<TeamMember> teamMembers = teamMemberRepository.findAllByTeam(team);
+
+        List<Emoticon> emoticons = emoticonRepository.findAllByPhoto(photo);
+        Set<Integer> emojiTypeSet = new HashSet<>();
+        for (Emoticon emoticon : emoticons) {
+            if (!emoticon.getSender().equals(user)) {
+                emojiTypeSet.add(emoticon.getEmojiType());
+            }
+        }
+        List<Integer> emojiTypeList = new ArrayList<>(emojiTypeSet);
+
+        for (Voice voice : voices) {
+            Member member = voice.getMember();
+            if (member.equals(user)) {
+                isUser = true;
+            }
+            voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
+        }
+        return new TeamPhotoDetailDto(photoId,
+                photo.getTitle(),
+                photo.getPhotoDate(),
+                emojiTypeList,
+                voiceDtoList
+        );
+    }
 }
