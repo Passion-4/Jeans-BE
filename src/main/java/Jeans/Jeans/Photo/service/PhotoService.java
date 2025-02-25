@@ -265,6 +265,7 @@ public class PhotoService {
             voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
         }
         return new TeamPhotoDetailDto(photoId,
+                photo.getPhotoUrl(),
                 photo.getTitle(),
                 photo.getPhotoDate(),
                 emojiTypeList,
