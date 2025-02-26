@@ -228,6 +228,7 @@ public class PhotoService {
             List<Integer> emojiTypeList = new ArrayList<>(emojiTypeSet);
 
             for (Voice voice : voices) {
+                isUser = false;
                 Member member = voice.getMember();
                 if (member.equals(user)) {
                     isUser = true;
@@ -272,6 +273,7 @@ public class PhotoService {
             }
 
             for (Voice voice : voices) {
+                isUser = false;
                 Member member = voice.getMember();
                 if (member.equals(user)) {
                     isUser = true;
