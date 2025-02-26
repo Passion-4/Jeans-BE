@@ -200,6 +200,15 @@ public class MemberService {
         }
     }
 
+    // 기본 보정 세 번째 값 설정
+    public String saveThirdBasicEditValue(Member member, BasicEditValueSaveReqDto reqDto) {
+        BasicEdit basicEdit = basicEditRepository.findByMember(member)
+                .orElseThrow(() -> new EntityNotFoundException("해당 회원의 BasicEdit이 존재하지 않습니다."));
+        basicEdit.updateEdit3(reqDto.getEdit());
+        basicEditRepository.save(basicEdit);
+        return "기본 보정 설정이 완료되었습니다.";
+    }
+
     // 음성 타입 조회
     public VoiceTypeResDto getMyAgentType(Member member){
         return new VoiceTypeResDto(member.getVoiceType());

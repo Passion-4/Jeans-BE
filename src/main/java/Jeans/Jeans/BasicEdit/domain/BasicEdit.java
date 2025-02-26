@@ -37,4 +37,8 @@ public class BasicEdit {
     public void updateEdit2(Boolean edit2){
         this.edit2 = edit2;
     }
+
+    public void updateEdit3(Boolean edit3){
+        this.edit3 = edit3;
+    }
 }
