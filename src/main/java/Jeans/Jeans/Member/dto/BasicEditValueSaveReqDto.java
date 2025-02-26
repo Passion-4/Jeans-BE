@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BasicEditRequestDto {
-    private Boolean edit1;
-    private Boolean edit2;
-    private Boolean edit3;
+public class BasicEditValueSaveReqDto {
+    private Boolean edit;
 }

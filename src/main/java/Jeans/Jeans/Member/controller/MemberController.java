@@ -7,9 +7,6 @@ import Jeans.Jeans.Member.service.MessageService;
 import Jeans.Jeans.Member.service.RefreshTokenService;
 import Jeans.Jeans.global.exception.ErrorCode;
 import Jeans.Jeans.global.service.S3Uploader;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,28 +93,19 @@ public class MemberController {
         return memberService.getMyProfile(member);
     }
 
+    // 기본 보정 첫 번째 값 설정
+    @PostMapping("/my/basic/first")
+    public BasicEditValueSaveResDto saveFirstBasicEditValue(@RequestBody BasicEditValueSaveReqDto reqDto){
+        Member member = memberService.getLoginMember();
+        return memberService.saveFirstBasicEditValue(member, reqDto);
+    }
+
     // 음성 타입 조회
     @GetMapping("/my/voice")
     @ResponseStatus(value = HttpStatus.OK)
     public VoiceTypeResDto getVoiceType(){
         Member member = memberService.getLoginMember();
         return memberService.getMyAgentType(member);
-    }
-
-    // 기본 보정 설정
-    @PostMapping("/my/basic")
-    public ResponseEntity<String> createBasicEdit(@RequestBody BasicEditRequestDto requestDto){
-        Member member = memberService.getLoginMember();
-        memberService.createBasicEdit(member, requestDto);
-        return new ResponseEntity<>("memberId가 " + member.getMemberId() + "인 member의 보정 선호 정보가 저장되었습니다.", HttpStatus.CREATED);
-    }
-
-    // 기본 보정 설정 변경
-    @PatchMapping("/my/basic")
-    public ResponseEntity<String> updateBasicEdit(@RequestBody BasicEditRequestDto requestDto){
-        Member member = memberService.getLoginMember();
-        memberService.updateBasicEdit(member, requestDto);
-        return new ResponseEntity<>("memberId가 " + member.getMemberId() + "인 member의 보정 선호 정보가 변경되었습니다.", HttpStatus.OK);
     }
 
     // 프로필 이미지 수정

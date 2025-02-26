@@ -157,22 +157,21 @@ public class MemberService {
         return new ProfileResponseDto(member.getName(), member.getProfileUrl(), member.getBirthday(), member.getPhone());
     }
 
+    // 기본 보정 첫 번째 값 설정
+    public BasicEditValueSaveResDto saveFirstBasicEditValue(Member member, BasicEditValueSaveReqDto reqDto){
+        Boolean edit1 = reqDto.getEdit();
+        basicEditRepository.save(new BasicEdit(member, edit1, false, false));
+        if (!edit1){
+            return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/1.png", "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/3.png");
+        }
+        else{
+            return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/2.png", "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/4.png");
+        }
+    }
+
     // 음성 타입 조회
     public VoiceTypeResDto getMyAgentType(Member member){
         return new VoiceTypeResDto(member.getVoiceType());
-    }
-
-    // 기본 보정 설정
-    public void createBasicEdit(Member member, BasicEditRequestDto requestDto){
-        BasicEdit basicEdit = new BasicEdit(member, requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
-        basicEditRepository.save(basicEdit);
-    }
-
-    // 기본 보정 설정 변경
-    public void updateBasicEdit(Member member, BasicEditRequestDto requestDto){
-        BasicEdit basicEdit = basicEditRepository.findByMember(member);
-        basicEdit.updateBasicEdit(requestDto.getEdit1(), requestDto.getEdit2(), requestDto.getEdit3());
-        basicEditRepository.save(basicEdit);
     }
 
     // 프로필 이미지 수정
