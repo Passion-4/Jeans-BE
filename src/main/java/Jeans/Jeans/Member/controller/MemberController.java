@@ -112,7 +112,7 @@ public class MemberController {
     public ResponseEntity<String> saveThirdBasicEditValue(@RequestBody BasicEditValueSaveReqDto reqDto){
         Member member = memberService.getLoginMember();
         String response = memberService.saveThirdBasicEditValue(member, reqDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 음성 타입 조회
