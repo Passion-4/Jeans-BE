@@ -169,6 +169,46 @@ public class MemberService {
         }
     }
 
+    // 기본 보정 두 번째 값 설정
+    public BasicEditValueSaveResDto saveSecondBasicEditValue(Member member, BasicEditValueSaveReqDto reqDto){
+        BasicEdit basicEdit = basicEditRepository.findByMember(member)
+                        .orElseThrow(() -> new EntityNotFoundException("해당 회원의 BasicEdit이 존재하지 않습니다."));
+        Boolean edit1 = basicEdit.getEdit1();
+        Boolean edit2 = reqDto.getEdit();
+        basicEdit.updateEdit2(edit2);
+        basicEditRepository.save(basicEdit);
+
+        if (!edit1) {
+            if (!edit2) {
+                return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/1.png",
+                        "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/5.png");
+            }
+            else {
+                return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/3.png",
+                        "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/7.png");
+            }
+        }
+        else {
+            if (!edit2) {
+                return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/2.png",
+                        "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/6.png");
+            }
+            else {
+                return new BasicEditValueSaveResDto("https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/4.png",
+                        "https://jeans-file-bucket.s3.ap-northeast-2.amazonaws.com/basic-edit-selection-image/8.png");
+            }
+        }
+    }
+
+    // 기본 보정 세 번째 값 설정
+    public String saveThirdBasicEditValue(Member member, BasicEditValueSaveReqDto reqDto) {
+        BasicEdit basicEdit = basicEditRepository.findByMember(member)
+                .orElseThrow(() -> new EntityNotFoundException("해당 회원의 BasicEdit이 존재하지 않습니다."));
+        basicEdit.updateEdit3(reqDto.getEdit());
+        basicEditRepository.save(basicEdit);
+        return "기본 보정 설정이 완료되었습니다.";
+    }
+
     // 음성 타입 조회
     public VoiceTypeResDto getMyAgentType(Member member){
         return new VoiceTypeResDto(member.getVoiceType());

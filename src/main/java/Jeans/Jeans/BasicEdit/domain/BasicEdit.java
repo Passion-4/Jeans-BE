@@ -34,9 +34,11 @@ public class BasicEdit {
         this.edit3 = edit3;
     }
 
-    public void updateBasicEdit(Boolean edit1, Boolean edit2, Boolean edit3){
-        this.edit1 = edit1;
+    public void updateEdit2(Boolean edit2){
         this.edit2 = edit2;
+    }
+
+    public void updateEdit3(Boolean edit3){
         this.edit3 = edit3;
     }
 }

@@ -100,6 +100,21 @@ public class MemberController {
         return memberService.saveFirstBasicEditValue(member, reqDto);
     }
 
+    // 기본 보정 두 번째 값 설정
+    @PatchMapping("/my/basic/second")
+    public BasicEditValueSaveResDto saveSecondBasicEditValue(@RequestBody BasicEditValueSaveReqDto reqDto){
+        Member member = memberService.getLoginMember();
+        return memberService.saveSecondBasicEditValue(member, reqDto);
+    }
+
+    // 기본 보정 세 번째 값 설정
+    @PatchMapping("/my/basic/third")
+    public ResponseEntity<String> saveThirdBasicEditValue(@RequestBody BasicEditValueSaveReqDto reqDto){
+        Member member = memberService.getLoginMember();
+        String response = memberService.saveThirdBasicEditValue(member, reqDto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
     // 음성 타입 조회
     @GetMapping("/my/voice")
     @ResponseStatus(value = HttpStatus.OK)
