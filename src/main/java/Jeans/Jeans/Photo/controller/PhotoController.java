@@ -132,7 +132,7 @@ public class PhotoController {
 
     // 동안 보정 결과 확인
     @PatchMapping("/photo/young")
-    public EditResponseDto getYoungEditResult(@RequestPart(value = "image") MultipartFile image){
+    public EditResponseDto getYoungEditResult(@RequestBody AdditionalEditReqDto reqDto){
         Member member = memberService.getLoginMember();
         return new EditResponseDto("https://원본", "https://보정본");
     }
@@ -143,16 +143,29 @@ public class PhotoController {
         return new ResultSelectDto(reqDto.getPhotoUrl());
     }
 
+    // 머리숱 보정 결과 확인
+    @PatchMapping("/photo/volume")
+    public EditResponseDto getVolumeEditResult(@RequestBody AdditionalEditReqDto reqDto){
+        Member member = memberService.getLoginMember();
+        return new EditResponseDto("https://원본", "https://보정본");
+    }
+
+    // 머리숱 보정 후 사진 선택
+    @PatchMapping("/photo/volume/save")
+    public ResultSelectDto selectVolumeEditResult(@RequestBody ResultSelectDto reqDto){
+        return new ResultSelectDto(reqDto.getPhotoUrl());
+    }
+
     // V라인 보정 결과 확인
     @PatchMapping("/photo/slim")
-    public SlimEditResponseDto getVolumeEditResult(@RequestPart(value = "image") MultipartFile image){
+    public SlimEditResponseDto getSlimEditResult(@RequestBody AdditionalEditReqDto reqDto){
         Member member = memberService.getLoginMember();
         return new SlimEditResponseDto("https://원본", "https://보정본1", "https://보정본2");
     }
 
     // V라인 보정 후 사진 선택
     @PatchMapping("/photo/slim/save")
-    public ResultSelectDto selectVolumeEditResult(@RequestBody ResultSelectDto reqDto){
+    public ResultSelectDto selectSlimEditResult(@RequestBody ResultSelectDto reqDto){
         return new ResultSelectDto(reqDto.getPhotoUrl());
     }
 }
