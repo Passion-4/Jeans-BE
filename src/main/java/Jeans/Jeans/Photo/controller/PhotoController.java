@@ -127,4 +127,11 @@ public class PhotoController {
         String response = "기본 보정이 마무리되었습니다.";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // 동안 보정 결과 확인
+    @PatchMapping("/photo/young")
+    public EditResponseDto getYoungEditResult(@RequestPart(value = "image") MultipartFile image){
+        Member member = memberService.getLoginMember();
+        return new EditResponseDto("https://원본", "https://보정본");
+    }
 }
