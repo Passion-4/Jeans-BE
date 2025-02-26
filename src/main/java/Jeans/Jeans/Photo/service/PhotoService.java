@@ -235,10 +235,20 @@ public class PhotoService {
                 }
                 voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
             }
+
+            Boolean isSharer;
+            if (photo.getMember()==user){
+                isSharer = true;
+            }
+            else {
+                isSharer = false;
+            }
+
             return new PhotoDetailDto(photoId,
                     photo.getPhotoUrl(),
                     photo.getTitle(),
                     photo.getPhotoDate(),
+                    isSharer,
                     emojiTypeList,
                     voiceDtoList
             );
@@ -280,10 +290,20 @@ public class PhotoService {
                 }
                 voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
             }
+
+            Boolean isSharer;
+            if (photo.getMember()==user){
+                isSharer = true;
+            }
+            else {
+                isSharer = false;
+            }
+
             return new PhotoDetailDto(photoId,
                     photo.getPhotoUrl(),
                     photo.getTitle(),
                     photo.getPhotoDate(),
+                    isSharer,
                     emojiTypeList,
                     voiceDtoList
             );
