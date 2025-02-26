@@ -114,5 +114,10 @@ public class PhotoController {
         return photoService.getEmoticonList(photoId);
     }
 
-
+    // 기본 보정 결과 확인
+    @PostMapping("/photo/basic")
+    public EditResponseDto getBasicEditResult(@RequestPart(value = "image") MultipartFile image){
+        Member member = memberService.getLoginMember();
+        return new EditResponseDto("https://원본", "https://보정본");
+    }
 }
