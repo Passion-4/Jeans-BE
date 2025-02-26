@@ -168,4 +168,19 @@ public class PhotoController {
     public ResultSelectDto selectSlimEditResult(@RequestBody ResultSelectDto reqDto){
         return new ResultSelectDto(reqDto.getPhotoUrl());
     }
+
+    // 사진에서 사용자의 얼굴 추출
+    @PostMapping("/photo/best")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public BestPhotoResDto getFaceImages(@RequestPart(value = "image1") MultipartFile image1,
+                                         @RequestPart(value = "image2") MultipartFile image2,
+                                         @RequestPart(value = "image3") MultipartFile image3,
+                                         @RequestPart(value = "image4") MultipartFile image4){
+        return new BestPhotoResDto("얼굴1", "얼굴2", "얼굴3", "얼굴4");
+    }
+
+    @PostMapping("/photo/best/{order}")
+    public ResultSelectDto selectBestPhoto(@PathVariable("order") Long order){
+        return new ResultSelectDto("https://해당 순서에 해당하는 원본");
+    }
 }
