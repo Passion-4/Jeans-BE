@@ -204,83 +204,88 @@ public class PhotoService {
         return photoDtoList;
     }
 
-    // 개인에게 공유한 사진 상세 조회
-    public FriendPhotoDetailDto getFriendPhotoDetail(Member user, Long photoId) {
+    // 사진 상세 조회
+    public PhotoDetailDto getPhotoDetail(Member user, Long photoId) {
         List<VoiceDto> voiceDtoList = new ArrayList<>();
         Photo photo = photoRepository.findById(photoId)
                 .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
         List<Voice> voices = voiceRepository.findAllByPhoto(photo);
-        Boolean isUser = false;
 
-        List<MemberPhoto> memberPhotos = memberPhotoRepository.findAllByPhoto(photo);
-        Member friend;
-        for (MemberPhoto memberPhoto : memberPhotos) {
-            if (!memberPhoto.getSharer().equals(user)) {
-                friend = memberPhoto.getSharer();
-            } else {
-                friend = memberPhoto.getReceiver();
+        // 팀에게 공유된 사진인 경우
+        if (Objects.nonNull(photo) && Objects.nonNull(photo.getTeam())) {
+            Boolean isUser = false;
+
+            Team team = photo.getTeam();
+            List<TeamMember> teamMembers = teamMemberRepository.findAllByTeam(team);
+
+            List<Emoticon> emoticons = emoticonRepository.findAllByPhoto(photo);
+            Set<Integer> emojiTypeSet = new HashSet<>();
+            for (Emoticon emoticon : emoticons) {
+                if (!emoticon.getSender().equals(user)) {
+                    emojiTypeSet.add(emoticon.getEmojiType());
+                }
             }
+            List<Integer> emojiTypeList = new ArrayList<>(emojiTypeSet);
+
+            for (Voice voice : voices) {
+                Member member = voice.getMember();
+                if (member.equals(user)) {
+                    isUser = true;
+                }
+                voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
+            }
+            return new PhotoDetailDto(photoId,
+                    photo.getPhotoUrl(),
+                    photo.getTitle(),
+                    photo.getPhotoDate(),
+                    emojiTypeList,
+                    voiceDtoList
+            );
         }
 
-        Optional<Emoticon> emoticonOptional = emoticonRepository.findByPhoto(photo);
-        Integer emojiType = 0;
-        if (emoticonOptional.isPresent()) {
-            Emoticon emoticon = emoticonOptional.get();
-            if (emoticon.getSender() != null && !emoticon.getSender().equals(user)) {
-                emojiType = emoticon.getEmojiType();
+        // 개인에게 공유된 사진인 경우
+        else {
+            Boolean isUser = false;
+
+            List<MemberPhoto> memberPhotos = memberPhotoRepository.findAllByPhoto(photo);
+            Member friend;
+            for (MemberPhoto memberPhoto : memberPhotos) {
+                if (!memberPhoto.getSharer().equals(user)) {
+                    friend = memberPhoto.getSharer();
+                } else {
+                    friend = memberPhoto.getReceiver();
+                }
             }
-        }
 
-        for (Voice voice : voices) {
-            Member member = voice.getMember();
-            if (member.equals(user)) {
-                isUser = true;
+            List<Integer> emojiTypeList = new ArrayList<>();
+            Optional<Emoticon> emoticonOptional = emoticonRepository.findByPhoto(photo);
+            Integer emojiType = null;
+            if (emoticonOptional.isPresent()) {
+                Emoticon emoticon = emoticonOptional.get();
+                if (emoticon.getSender() != null && !emoticon.getSender().equals(user)) {
+                    emojiType = emoticon.getEmojiType();
+                }
             }
-            voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
-        }
-        return new FriendPhotoDetailDto(photoId,
-                photo.getPhotoUrl(),
-                photo.getTitle(),
-                photo.getPhotoDate(),
-                emojiType,
-                voiceDtoList
-        );
-    }
 
-    // 팀에게 공유한 사진 상세 조회
-    public TeamPhotoDetailDto getTeamPhotoDetail(Member user, Long photoId){
-        List<VoiceDto> voiceDtoList = new ArrayList<>();
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
-        List<Voice> voices = voiceRepository.findAllByPhoto(photo);
-        Boolean isUser = false;
-
-        Team team = photo.getTeam();
-        List<TeamMember> teamMembers = teamMemberRepository.findAllByTeam(team);
-
-        List<Emoticon> emoticons = emoticonRepository.findAllByPhoto(photo);
-        Set<Integer> emojiTypeSet = new HashSet<>();
-        for (Emoticon emoticon : emoticons) {
-            if (!emoticon.getSender().equals(user)) {
-                emojiTypeSet.add(emoticon.getEmojiType());
+            if (emojiType != null){
+                emojiTypeList.add(emojiType);
             }
-        }
-        List<Integer> emojiTypeList = new ArrayList<>(emojiTypeSet);
 
-        for (Voice voice : voices) {
-            Member member = voice.getMember();
-            if (member.equals(user)) {
-                isUser = true;
+            for (Voice voice : voices) {
+                Member member = voice.getMember();
+                if (member.equals(user)) {
+                    isUser = true;
+                }
+                voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
             }
-            voiceDtoList.add(new VoiceDto(voice.getVoiceId(), member.getProfileUrl(), member.getName(), voice.getTranscript(), voice.getVoiceUrl(), isUser));
+            return new PhotoDetailDto(photoId,
+                    photo.getPhotoUrl(),
+                    photo.getTitle(),
+                    photo.getPhotoDate(),
+                    emojiTypeList,
+                    voiceDtoList
+            );
         }
-        return new TeamPhotoDetailDto(photoId,
-                photo.getPhotoUrl(),
-                photo.getTitle(),
-                photo.getPhotoDate(),
-                emojiTypeList,
-                voiceDtoList
-        );
     }
 
     // 이모티콘 전송

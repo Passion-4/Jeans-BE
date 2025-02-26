@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamPhotoDetailDto {
+public class PhotoDetailDto {
     private Long photoId;
     private String photoUrl;
     private String title;
@@ -18,7 +18,7 @@ public class TeamPhotoDetailDto {
     private List<Integer> emojiTypeList;
     private List<VoiceDto> voiceList;
 
-    public TeamPhotoDetailDto(Long photoId, String photoUrl, String title, LocalDate date, List<Integer> emojiTypeList, List<VoiceDto> voiceList){
+    public PhotoDetailDto(Long photoId, String photoUrl, String title, LocalDate date, List<Integer> emojiTypeList, List<VoiceDto> voiceList){
         this.photoId = photoId;
         this.photoUrl = photoUrl;
         this.title = title;

@@ -10,12 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -92,20 +90,12 @@ public class PhotoController {
         return photoService.getTeamPhotos(user, teamId);
     }
 
-    // 개인에게 공유한 사진 상세 조회
-    @GetMapping("/friend-photos/{photo_id}/detail")
+    // 사진 상세 조회
+    @GetMapping("/photos/{photo_id}/detail")
     @ResponseStatus(value = HttpStatus.OK)
-    public FriendPhotoDetailDto getFriendPhotoDetail(@PathVariable("photo_id") Long photoId){
+    public PhotoDetailDto getPhotoDetail(@PathVariable("photo_id") Long photoId){
         Member user = memberService.getLoginMember();
-        return photoService.getFriendPhotoDetail(user, photoId);
-    }
-
-    // 팀에게 공유한 사진 상세 조회
-    @GetMapping("/team-photos/{photo_id}/detail")
-    @ResponseStatus(value = HttpStatus.OK)
-    public TeamPhotoDetailDto getTeamPhotoDetail(@PathVariable("photo_id") Long photoId){
-        Member user = memberService.getLoginMember();
-        return photoService.getTeamPhotoDetail(user, photoId);
+        return photoService.getPhotoDetail(user, photoId);
     }
 
     // 이모티콘 전송
