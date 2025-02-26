@@ -123,7 +123,7 @@ public class PhotoController {
     
     // 기본 보정 후 사진 선택
     @PatchMapping("/photo/basic/save")
-    public ResponseEntity<String> selectBasicEditResult(@RequestBody ResultSelectReqDto reqDto){
+    public ResponseEntity<String> selectBasicEditResult(@RequestBody ResultSelectDto reqDto){
         String response = "기본 보정이 마무리되었습니다.";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -133,5 +133,12 @@ public class PhotoController {
     public EditResponseDto getYoungEditResult(@RequestPart(value = "image") MultipartFile image){
         Member member = memberService.getLoginMember();
         return new EditResponseDto("https://원본", "https://보정본");
+    }
+
+    // 동안 보정 후 사진 선택
+    @PatchMapping("/photo/young/save")
+    public ResultSelectDto selectYoungEditResult(@RequestBody ResultSelectDto reqDto){
+        String response = "기본 보정이 마무리되었습니다.";
+        return new ResultSelectDto(reqDto.getPhotoUrl());
     }
 }
