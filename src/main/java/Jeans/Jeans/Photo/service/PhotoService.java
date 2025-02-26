@@ -121,6 +121,15 @@ public class PhotoService {
         return "사진이 삭제되었습니다.";
     }
 
+    // 사진에 음성 첨부
+    public VoiceMessageResDto createVoiceMessage(Member member, String audioUrl, VoiceMessageReqDto reqDto){
+        Long photoId = reqDto.getPhotoId();
+        Photo photo = photoRepository.findById(reqDto.getPhotoId())
+                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
+        voiceRepository.save(new Voice(photo, member, audioUrl, "임시 텍스트"));
+        return new VoiceMessageResDto(audioUrl);
+    }
+
     // 내 피드 조회
     public List<FeedPhotoDto> getFeedPhotos(Member member){
         List<FeedPhotoDto> feedPhotoDtoList = new ArrayList<>();

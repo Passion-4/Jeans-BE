@@ -4,10 +4,7 @@ import Jeans.Jeans.Member.domain.Member;
 import Jeans.Jeans.Photo.domain.Photo;
 import Jeans.Jeans.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter @Setter
@@ -31,4 +28,12 @@ public class Voice extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String transcript;
+
+    @Builder
+    public Voice(Photo photo, Member member, String voiceUrl, String transcript){
+        this.photo = photo;
+        this.member = member;
+        this.voiceUrl = voiceUrl;
+        this.transcript = transcript;
+    }
 }

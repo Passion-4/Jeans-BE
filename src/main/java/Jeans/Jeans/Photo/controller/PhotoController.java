@@ -57,6 +57,17 @@ public class PhotoController {
         return ResponseEntity.ok("사진이 삭제되었습니다.");
     }
 
+    // 사진에 음성 첨부
+    @PostMapping(value = "/photo/voice", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public VoiceMessageResDto createVoiceMessage(@RequestPart(value = "audio") MultipartFile image,
+                                           @RequestParam(value = "dto") String dtoJson) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        VoiceMessageReqDto reqDto = objectMapper.readValue(dtoJson, VoiceMessageReqDto.class);
+        Member user = memberService.getLoginMember();
+        String audioUrl = s3Uploader.upload(image, "photo-voice");
+        return photoService.createVoiceMessage(user, audioUrl, reqDto);
+    }
+
     // 내 피드 조회
     @GetMapping("/feed")
     @ResponseStatus(value = HttpStatus.OK)
