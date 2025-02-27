@@ -56,7 +56,7 @@ public class PhotoService {
             memberPhotoRepository.save(new MemberPhoto(photo, user, friend));
         }
 
-        List<String> tagNameList = new ArrayList<>(Arrays.asList("테스트 태그1", "테스트 태그2", "테스트 태그3"));
+        List<String> tagNameList = new ArrayList<>(Arrays.asList("행복", "우정사진", "MZ포즈"));
 
         for (String tagName : tagNameList){
             Tag tag = tagRepository.findByName(tagName);
@@ -79,7 +79,7 @@ public class PhotoService {
         Photo photo = new Photo(user, team, photoUrl, "테스트 제목", LocalDate.of(2025, 2, 23));
         photoRepository.save(photo);
 
-        List<String> tagNameList = new ArrayList<>(Arrays.asList("테스트 태그1", "테스트 태그2", "테스트 태그3"));
+        List<String> tagNameList = new ArrayList<>(Arrays.asList("행복", "우정사진", "MZ포즈"));
 
         for (String tagName : tagNameList){
             Tag tag = tagRepository.findByName(tagName);
