@@ -340,16 +340,4 @@ public class PhotoService {
         }
         return emoticonDtoList;
     }
-
-    // 태그 리스트 조회
-    public TagListResDto getTagList(Long photoId){
-        List<String> tagList = new ArrayList<>();
-        Photo photo = photoRepository.findById(photoId)
-                .orElseThrow(() -> new EntityNotFoundException("photoId가 " + photoId + "인 사진이 존재하지 않습니다."));
-        List<Tag> tags = tagRepository.findAllByPhoto(photo);
-        for (Tag tag : tags){
-            tagList.add(tag.getName());
-        }
-        return new TagListResDto(photoId, tagList);
-    }
 }
