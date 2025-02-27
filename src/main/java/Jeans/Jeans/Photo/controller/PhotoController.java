@@ -183,4 +183,10 @@ public class PhotoController {
     public ResultSelectDto selectBestPhoto(@PathVariable("order") Long order){
         return new ResultSelectDto("https://해당 순서에 해당하는 원본");
     }
+
+    // 사진의 태그 조회
+    @GetMapping("/photo/{photo_id}/tags")
+    public TagListResDto getTagList(@PathVariable("photo_id") Long photoId){
+        return photoService.getTagList(photoId);
+    }
 }
