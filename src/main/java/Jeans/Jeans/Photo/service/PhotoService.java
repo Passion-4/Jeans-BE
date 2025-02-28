@@ -47,7 +47,7 @@ public class PhotoService {
     public PhotoShareResDto shareFriendPhoto(Member user, String photoUrl, FriendShareReqDto shareReqDto){
         List<Long> receiverList = shareReqDto.getReceiverList();
 
-        Photo photo = new Photo(user, null, photoUrl, "테스트 제목", LocalDate.of(2025, 2, 23));
+        Photo photo = new Photo(user, null, photoUrl, "행복한 순간", LocalDate.of(2025, 2, 23));
         photoRepository.save(photo);
 
         for (Long memberId : receiverList){
@@ -76,7 +76,7 @@ public class PhotoService {
         Long teamId = shareReqDto.getTeamId();
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new EntityNotFoundException("teamId가 " + teamId + "인 팀이 존재하지 않습니다."));
-        Photo photo = new Photo(user, team, photoUrl, "테스트 제목", LocalDate.of(2025, 2, 23));
+        Photo photo = new Photo(user, team, photoUrl, "행복한 순간", LocalDate.of(2025, 2, 23));
         photoRepository.save(photo);
 
         List<String> tagNameList = new ArrayList<>(Arrays.asList("행복", "우정사진", "MZ포즈"));
